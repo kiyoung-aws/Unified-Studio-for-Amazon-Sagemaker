@@ -1,4 +1,4 @@
-## My Project
+## SageMaker Unified Studio (Preview)
 
 TODO: Fill this README out!
 
