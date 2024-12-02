@@ -64,3 +64,22 @@ Before beginning the migration process from EMR Studio to SageMaker Unified Stud
 - [ ] EMR Studio workflow processes documented for reference during migration
 
 By ensuring all these prerequisites are met, you'll be well-prepared to begin the migration process to SageMaker Unified Studio for Data Processing. The following sections will guide you through the step-by-step migration process, provide example scripts, and offer best practices and troubleshooting tips.
+
+
+## Migration Steps
+
+### Step 1: IAM Roles (Runtime roles) - Bring your own role
+
+**Pending**
+
+#### 1. Inventory Your EMR Studio Resources
+
+- List all notebooks, workspaces, and associated data
+- Identify and Copy Necessary Artifacts for Migration to MaxDome
+
+From your MaxDome Project notebook terminal, perform the following steps:
+
+a. Describe the EMR Studio by its ID to get the Default S3 location:
+
+```bash
+aws emr describe-studio --studio-id es-D5G4WREET32JMJ0W90RN686KH
