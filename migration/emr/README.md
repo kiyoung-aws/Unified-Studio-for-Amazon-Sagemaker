@@ -10,6 +10,12 @@ This guide provides step-by-step instructions and example script samples to help
 2. EMR Compute (Permission Changes)
 3. EMR Studio (Notebooks)
 
+## End-to-End Migration Flow
+
+The following diagram illustrates the end-to-end migration process:
+
+![End-to-End Migration Flow](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/raw/main/migration/emr/img/e2e.png)
+
 ## Table of Contents
 
 1. [Prerequisites](#prerequisites)
