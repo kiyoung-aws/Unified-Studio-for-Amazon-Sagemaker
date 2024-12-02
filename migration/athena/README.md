@@ -86,7 +86,7 @@ $ aws athena tag-resource --resource-arn arn:aws:athena:<region>:<aws-account-id
 $ aws datazone list-connections --domain-identifier <domain-id> --project-identifier <project-id> --type ATHENA --region <region>
 ```
 Output:
-```json
+```
 {
     "items": [
         {
@@ -104,7 +104,7 @@ Output:
 $ aws datazone update-connection --domain-identifier <domain-id> --identifier <connectionId> --props "{\"athenaProperties\":{\"workgroupName\":\"<workgroup-to-be-used>\"}}"
 ```
 You should see following response with ``workgroupName`` updated:
-```json
+```
 {
     ...
     ...
