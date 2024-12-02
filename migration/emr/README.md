@@ -24,7 +24,7 @@ This guide provides step-by-step instructions and example script samples to help
 
 ## Prerequisites
 
-Before beginning the migration process from EMR Studio to SageMaker Unified Studio for Data Processing (MaxDome), ensure you have the following:
+Before beginning the migration process from EMR Studio to SageMaker Unified Studio for Data Processing, ensure you have the following:
 
 ### Access and Permissions
 - [ ] Access to both EMR Studio and SageMaker Unified Studio for Data Processing
