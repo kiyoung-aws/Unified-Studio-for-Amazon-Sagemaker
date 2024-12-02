@@ -52,7 +52,7 @@ Before beginning the migration process from EMR Studio to SageMaker Unified Stud
 
 ### Additional Tools
 - [ ] Git repository for version control of notebooks (recommended)
-- [ ] Any specialized libraries or dependencies used in EMR Studio identified for reinstallation in MaxDome
+- [ ] Any specialized libraries or dependencies used in EMR Studio identified for modifications in need interface.
 
 ### Documentation
 - [ ] EMR Studio workflow processes documented for reference during migration
