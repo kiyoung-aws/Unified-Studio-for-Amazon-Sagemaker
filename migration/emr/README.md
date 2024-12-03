@@ -30,41 +30,46 @@ The following diagram illustrates the end-to-end migration process:
 
 ## Prerequisites
 
-Before beginning the migration process from EMR Studio to SageMaker Unified Studio for Data Processing, ensure you have the following:
+Before proceeding with migration, ensure you have:
 
-### Access and Permissions
-- [ ] Access to both EMR Studio and SageMaker Unified Studio for Data Processing
-- [ ] Necessary IAM permissions in your AWS account for both services
+- Understanding of [Amazon SageMaker Unified Studio](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/adminguide/what-is-sagemaker-unified-studio.html)
+- Access to a [domain](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/adminguide/working-with-domains.html) and a project created in SageMaker Unified Studio (Refer to [Create a new project](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/userguide/create-new-project.html))
+- Python, [boto3](https://pypi.org/project/boto3/) and [nbformat](https://pypi.org/project/nbformat/) installed on the machine where you'll execute migration steps
+- [AWS Command Line Interface (AWS CLI)](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed/updated and configured on the machine where you'll execute migration steps
+- The IAM User/Role performing the steps in this guide should have the following permissions:
 
-### AWS Environment Setup
-- [ ] AWS CLI installed and configured with appropriate credentials
-- [ ] Python environment with boto3 library installed (version X.X or higher)
-
-### Data Preparation
-- [ ] All EMR Studio notebooks and associated data backed up
-- [ ] Inventory of all EMR Studio resources (notebooks, clusters, configurations)
-
-### EMR Configuration
-- [ ] For EMR on EC2: Clusters with GCSC (GetClusterSessionCredentials) API enabled via Security Configuration
-- [ ] For EMR Serverless: Runtime roles identified and documented
-
-### SageMaker Studio Readiness
-- [ ] SageMaker domain and user profile set up
-- [ ] Familiarity with SageMaker Studio interface and basic operations
-
-### Network and Security
-- [ ] VPC and security group configurations reviewed and prepared for MaxDome
-- [ ] Any required VPC endpoints for SageMaker and related services set up
-
-### Additional Tools
-- [ ] Git repository for version control of notebooks (recommended)
-- [ ] Any specialized libraries or dependencies used in EMR Studio identified for modifications in need interface.
-
-### Documentation
-- [ ] EMR Studio workflow processes documented for reference during migration
-
-By ensuring all these prerequisites are met, you'll be well-prepared to begin the migration process to SageMaker Unified Studio for Data Processing. The following sections will guide you through the step-by-step migration process, provide example scripts, and offer best practices and troubleshooting tips.
-
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+              "elasticmapreduce:GetClusterSessionCredentials"
+            ],
+            "Resource": "arn:aws:elasticmapreduce:<region>:<aws-account-id>:cluster/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "codecommit:GetBranch",
+                "codecommit:CreateCommit"
+            ],
+            "Resource": "arn:aws:codecommit:<region>:<aws-account-id>:<repo-name>"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "datazone:ListConnections",
+                "datazone:UpdateConnection"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+Step 1.2 below shows how to fetch the repo for the project. While the above sample uses "*” for some of the Resources, consider restricting it according to your security requirements.
+- Add the IAM user/role as the [domain's owner](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/adminguide/user-management.html) and the [project's owner](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/userguide/add-project-members.html) to be able to execute steps in this guide
 
 ## Migration Steps
 
