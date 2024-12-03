@@ -102,8 +102,8 @@ Example output:
 ```
 {
 "Studio": {
-"StudioId": "es-D5G4WREET32JMJ0W90RN686KH",
-"StudioArn": "arn:aws:elasticmapreduce:us-west-2:XXXXXXXXXX:studio/es-D5G4WREET32JMJ0W90RN686KH",
+"StudioId": "es-XXX",
+"StudioArn": "arn:aws:elasticmapreduce:us-west-2:XXXXXXXXXX:studio/es-XXXX",
 "Name": "Studio_2",
 "Description": "",
 "AuthMode": "IAM",
@@ -127,13 +127,13 @@ aws s3 ls s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/
 
 Example output:
 ```
-                           PRE e-7QX2VHPYXESC65FUUC1WDT0E2/
-                           PRE e-EU1V9IEQBY4ZWRIVS6GGH2MV7/
+                           PRE e-XXXX/
+                           PRE e-YYYY/
 ```
 c. Download an entire sub-folder to your local machine:
 
 ```
-aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-EU1V9IEQBY4ZWRIVS6GGH2MV7/ emr_workspace_files/e-EU1V9IEQBY4ZWRIVS6GGH2MV7
+aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-XXXX/ emr_workspace_files/e-XXXX
 ```
 
 ### Step 2. Migrate your notebooks
@@ -152,9 +152,9 @@ code_commit = boto3.client('codecommit')
 repo = "src"
 branch = "main"
 
-local_folder = "/Users/<YOUR_USER_ID>/emr_workspace_files/e-EU1V9IEQBY4ZWRIVS6GGH2MV7"
-emr_studio_id = "es-D5G4WREET32JMJ0W90RN686KH"
-emr_workspace_id = "e-EU1V9IEQBY4ZWRIVS6GGH2MV7"
+local_folder = "/Users/<YOUR_USER_ID>/emr_workspace_files/e-XXXX"
+emr_studio_id = "es-XXXX"
+emr_workspace_id = "e-XXXX"
 
 putFilesList = []
 
@@ -255,7 +255,7 @@ This step will create a connector in your project to establish a connection with
 "Condition": {
 "StringLike": {
 "aws:SourceAccount": "121223232323232",
-"aws:SourceArn": "arn:aws:emr-serverless:us-west-2:002519298858:/applications/00fn1sjq936oua0l"
+"aws:SourceArn": "arn:aws:emr-serverless:us-west-2:121223232323232:/applications/00fsdsdssdsldkfd"
 }
 }
 }
@@ -271,9 +271,9 @@ cat<<EOF >/home/**************/<your-project>/<your-domain>/.connections/shared/
   "name": "studio2.spark_emr_serverless",
   "authorizationMode": "PROJECT",
   "provisioningType": "MANAGED",
-  "domainIdentifier": "dzd_5sppmf8bft9ok0",
-  "projectIdentifier": "6evk5zthkn3jm8",
-  "environmentIdentifier": "4ykqpszj0vefbk",
+  "domainIdentifier": "dzd_<yourid>",
+  "projectIdentifier": "<your_project_id>",
+  "environmentIdentifier": "your_env_id",
   "type": "SPARK_EMR_SERVERLESS",
   "sparkEmrProperties": {
     "emrComputeArn": "arn:aws:emr-serverless:<region>2:XXXXXXXXXXX:/applications/yyyyyyyyyy"
