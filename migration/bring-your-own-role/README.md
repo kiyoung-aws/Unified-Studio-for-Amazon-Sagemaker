@@ -1,6 +1,6 @@
-# BringYourOwnRoleScript for SageMaker NextGen
+# BringYourOwnRoleScript for SageMaker Unified Studio
 
-A utility script for Bring Your Own IAM Role in SageMaker NextGen projects. This tool helps configure permissions and customize role assignments for SageMaker NextGen environments.
+A utility script for Bring Your Own IAM Role in SageMaker Unified Studio projects. This tool helps configure permissions and customize role assignments for SageMaker Unified Studio environments.
 
 # What You need to Be Aware Of Before Executing the Script
 - The script can stop all running jobs within your Project, so make sure you have saved everything, and no job is in running status before moving forward.
@@ -127,21 +127,21 @@ For information on configuring credentials to use the executor permissions, refe
 In terminal, navigate to the directory containing `bring_your_own_role.py` before executing commands.
 
 ### Available Commands
-#### Use Case 1: Replace SageMaker NextGen Project Role with your own Role
+#### Use Case 1: Replace SageMaker Unified Studio Project Role with your own Role
 Replace the default project role with your custom role:
 ```
 python3 bring_your_own_role.py use-your-own-role \
-    --domain-id <SageMaker-NextGen-Domain-Id> \
-    --project-id <SageMaker-NextGen-Project-Id> \
+    --domain-id <SageMaker-Unified-Studio-Domain-Id> \
+    --project-id <SageMaker-Unified-Studio-Project-Id> \
     --bring-in-role-arn <Custom-IAM-Role-Arn> \
     --region <region-code> \
     --endpoint <endpoint-url>
 ```
-#### Use Case 2: Replace SageMaker NextGen Project Role with your own Role
+#### Use Case 2: Replace SageMaker Unified Studio Project Role with your own Role
 ```
 python3 bring_your_own_role.py enhance-project-role \
-    --domain-id <SageMaker-NextGen-Domain-Id> \
-    --project-id <SageMaker-NextGen-Project-Id> \
+    --domain-id <SageMaker-Unified-Studio-Domain-Id> \
+    --project-id <SageMaker-Unified-Studio-Project-Id> \
     --bring-in-role-arn <Custom-IAM-Role-Arn> \
     --region <region-code> \
     --endpoint <endpoint-url>
