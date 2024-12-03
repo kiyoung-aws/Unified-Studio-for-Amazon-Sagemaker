@@ -86,7 +86,7 @@ Refer to this [section](https://github.com/aws/Unified-Studio-for-Amazon-Sagemak
 ### Step 2: Inventory Your EMR Studio Resources
 
 - List all notebooks, workspaces, and associated data
-- Identify and Copy Necessary Artifacts for Migration to MaxDome
+- Identify and Copy Necessary Artifacts for Migration to Sagemaker Unified Studio
 
 From your SM Unified Studio Project notebook terminal, perform the following steps:
 
@@ -142,7 +142,7 @@ aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-EU1V
     * Export notebooks from EMR Studio
     * Import notebooks into SageMaker Unified Studio
 
-a. Upload the entire folder to the MaxDome project's CodeCommit repository:
+a. Upload the entire folder to the Sagemaker Unified Studio project's CodeCommit repository:
 
 ```
 import os
@@ -181,7 +181,7 @@ parentCommitId=parent_commit_id,
 putFiles=putFilesList)
 ```
 
-b. After running this script, go to the MaxDome portal and perform a git pull from the UI to see the imported files from the EMR workspace:
+b. After running this script, go to the Sagemaker Unified Studio portal and perform a git pull from the UI to see the imported files from the EMR workspace:
 
 ![Repo](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo.png)
 
@@ -192,14 +192,14 @@ b. After running this script, go to the MaxDome portal and perform a git pull fr
 ### Step 2: EMR Compute - Update Data Source Connections in Unified Studio
 
     * Reconfigure data source connections in SageMaker Unified Studio 
-    * Prepare Your EMR Compute for MaxDome Interface/Notebooks
+    * Prepare Your EMR Compute for Sagemaker Unified Studio Interface/Notebooks
 
 Unified Studio supports two types of connections for EMR compute:
 
     1. EMR Serverless
     2. EMR on EC2
 
-Depending on your requirements and existing infrastructure, you'll need to choose and prepare the appropriate EMR compute option for use with MaxDome. Follow the instructions below based on your situation:
+Depending on your requirements and existing infrastructure, you'll need to choose and prepare the appropriate EMR compute option for use with Sagemaker Unified Studio. Follow the instructions below based on your situation:
 
    #### Option 1: Setting Up New EMR Compute
 
@@ -239,7 +239,7 @@ This step will create a connector in your project to establish a connection with
 
 1. Ensure your EMR Serverless application is using EMR version 7 or later.
 2. Verify that the Livy endpoint is enabled in your EMR Serverless application configuration.
-3. Add the following trust relationship to your MaxDome project/user role:
+3. Add the following trust relationship to your Sagemaker Unified Studio project/user role:
 
 ```
 {
@@ -297,7 +297,7 @@ git commit -m "Adding a new EMR serverless connection file"
 git push
 ```
 
-* Restart the Jupyter server to recognize the new MaxDome connector:
+* Restart the Jupyter server to recognize the new Sagemaker Unified Studio connector:
 
 ```
 restart-sagemaker-ui-jupyter-server
