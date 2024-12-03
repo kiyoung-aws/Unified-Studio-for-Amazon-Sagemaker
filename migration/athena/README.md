@@ -31,11 +31,9 @@ Before proceeding with migration, ensure you have:
         {
             "Effect": "Allow",
             "Action": [
-                "athena:ListNamedQueries",
-                "athena:GetNamedQuery",
-                "athena:TagResource"
+                elasticmapreduce:GetClusterSessionCredentials
             ],
-            "Resource": "arn:aws:athena:<region>:<aws-account-id>:workgroup/<your-workgroup-name>"
+           "arn:aws:elasticmapreduce:<region>:<aws-account-id>:cluster/*"
         },
         {
             "Effect": "Allow",
@@ -58,6 +56,7 @@ Before proceeding with migration, ensure you have:
 ```
 Step 1.2 below shows how to fetch the repo for the project. While the above sample uses "*” for some of the Resources, consider restricting it according to your security requirements.
 - Add the IAM user/role as the [domain's owner](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/adminguide/user-management.html) and the [project's owner](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/userguide/add-project-members.html) to be able to execute steps in this guide
+
 ## Steps
 ### 1. Migrate saved queries to SageMaker Unified Studio's project
 This step copies all the saved queries from an existing Athena workgroup to the SageMaker Unified Studio's code repository as ``.sqlnb`` files. These files can be opened in the query editor of the project.
