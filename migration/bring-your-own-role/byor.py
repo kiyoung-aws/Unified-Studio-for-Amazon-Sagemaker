@@ -632,7 +632,7 @@ def byor_main():
         _update_trust_policy(project_role['Role']['RoleName'], new_trust_policy, iam_client, args.execute)
 
         # Copy BYOR Role's managed policies to Project Role
-        _copy_managed_policies_arn(project_role, byor_role, [], iam_client, args.execute)
+        _copy_managed_policies_arn(byor_role, project_role, [], iam_client, args.execute)
 
         # Copy BYOR Role's inline policies to Project Role
         _copy_inline_policies_arn(byor_role, project_role, iam_client, args.execute)

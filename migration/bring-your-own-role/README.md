@@ -4,7 +4,7 @@ A utility script for Bring Your Own IAM Role in SageMaker Unified Studio project
 
 # Important Prerequisites and Considerations
 ## Resource Creation
-The BYOR (Bring Your Own Role) role replacement functionality will prevent successful creation of new resources, including:
+After Project creation, the BYOR (Bring Your Own Role) role replacement functionality will prevent successful creation of new resources within the Project, including:
 - Amazon EMR Cluster on EC2
 - Amazon EMR Serverless
 - Amazon Redshift Serverless
@@ -150,7 +150,6 @@ python3 bring_your_own_role.py use-your-own-role \
     --project-id <SageMaker-Unified-Studio-Project-Id> \
     --bring-in-role-arn <Custom-IAM-Role-Arn> \
     --region <region-code> \
-    --endpoint <endpoint-url>
 ```
 #### Use Case 2: Replace SageMaker Unified Studio Project Role with your own Role
 ```
@@ -159,9 +158,8 @@ python3 bring_your_own_role.py enhance-project-role \
     --project-id <SageMaker-Unified-Studio-Project-Id> \
     --bring-in-role-arn <Custom-IAM-Role-Arn> \
     --region <region-code> \
-    --endpoint <endpoint-url>
 ```
 ### Important Notes
 - Both commands will display a preview of proposed changes by default
 - Add the `--execute` flag to apply the changes
-- The `--region` and `--endpoint` parameters are optional and only required when necessary
+- The `--region` parameter is optional and only required when necessary
