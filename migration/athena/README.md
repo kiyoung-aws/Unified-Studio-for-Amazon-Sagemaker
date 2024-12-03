@@ -121,8 +121,8 @@ You should see following response with ``workgroupName`` updated:
 The migrated Athena queries will access existing databases and tables in the Glue Catalog and federated connections in the Athena catalog. The default SageMaker Unified Studio project's role will not have a) access to these catalog resources by default and b) permission to execute queries in the existing workgroup configured above. To provide the required access, you can use an existing role that you use in Athena as the project role. Please refer to [Bring your own role guide](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/tree/main/migration/bring-your-own-role) for guidance. Here, is an example CLI command for the same:
 ```
 $ python3 bring_your_own_role.py use-your-own-role \
-    --domain-id <SageMaker-NextGen-Domain-Id> \
-    --project-id <SageMaker-NextGen-Project-Id> \
+    --domain-id <SageMaker-Unified-Studio-Domain-Id> \
+    --project-id <SageMaker-Unified-Studio-Project-Id> \
     --bring-in-role-arn <Custom-IAM-Role-Arn> \
     --region <region-code> \
     --endpoint <endpoint-url>
