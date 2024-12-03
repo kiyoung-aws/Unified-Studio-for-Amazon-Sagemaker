@@ -1,6 +1,6 @@
 # BringYourOwnRoleScript for SageMaker NextGen
 
-** A utility script for Bring Your Own IAM Role in SageMaker NextGen projects. This tool helps configure permissions and customize role assignments for SageMaker NextGen environments. **
+A utility script for Bring Your Own IAM Role in SageMaker NextGen projects. This tool helps configure permissions and customize role assignments for SageMaker NextGen environments.
 
 # What You need to Be Aware Of Before Executing the Script
 - The script can stop all running jobs within your Project, so make sure you have saved everything, and no job is in running status before moving forward.
