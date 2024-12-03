@@ -139,8 +139,8 @@ aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-EU1V
 
 ### Step 2. Migrate your notebooks
 
-    * Export notebooks from EMR Studio
-    * Import notebooks into SageMaker Unified Studio
+    - Export notebooks from EMR Studio
+    - Import notebooks into SageMaker Unified Studio
 
 a. Upload the entire folder to the Sagemaker Unified Studio project's CodeCommit repository:
 
@@ -191,8 +191,8 @@ b. After running this script, go to the Sagemaker Unified Studio portal and perf
 
 ### Step 2: EMR Compute - Update Data Source Connections in Unified Studio
 
-    * Reconfigure data source connections in SageMaker Unified Studio 
-    * Prepare Your EMR Compute for Sagemaker Unified Studio Interface/Notebooks
+    - Reconfigure data source connections in SageMaker Unified Studio 
+    - Prepare Your EMR Compute for Sagemaker Unified Studio Interface/Notebooks
 
 Unified Studio supports two types of connections for EMR compute:
 
@@ -308,8 +308,8 @@ After completing these steps, open a notebook in Unified Studio. You should now 
 
 For existing EMR on EC2 clusters:
 
-    * [Checklist for ensuring your cluster meets Sagemaker Unified Studio requirements]
-    * [Guidelines for modifying existing clusters if needed]
+    - [Checklist for ensuring your cluster meets Sagemaker Unified Studio requirements]
+    - [Guidelines for modifying existing clusters if needed]
 
 ![Compute](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/addcompute3.png)
 
