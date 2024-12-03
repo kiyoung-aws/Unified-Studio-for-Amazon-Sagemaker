@@ -187,6 +187,12 @@ b. After running this script, go to the Sagemaker Unified Studio portal and perf
 
 ![Repo2](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo2.png)
 
+<table>
+  <tr>
+    <td><img src="https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo.png" width="400"></td>
+    <td><img src="https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo2.png" width="400"></td>
+  </tr>
+</table>
 
 
 ### Step 2: EMR Compute - Update Data Source Connections in Unified Studio
