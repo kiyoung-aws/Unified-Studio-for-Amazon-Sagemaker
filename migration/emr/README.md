@@ -81,7 +81,7 @@ Step 1.2 below shows how to fetch the repo for the project. While the above samp
 
 ### Step 1: IAM Roles (Runtime roles) - Bring your own role
 
-**Stay Tuned**
+Refer to this [section](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/bring-your-own-role/README.md) for migrating your existing roles into Sagamaker Unified Studio.
 
 ### Step 2: Inventory Your EMR Studio Resources
 
