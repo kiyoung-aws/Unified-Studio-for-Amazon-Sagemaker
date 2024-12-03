@@ -7,8 +7,9 @@ This guide provides step-by-step instructions and example script samples to help
 ## The migration process focuses on three key areas:
 
 1. IAM Roles (Runtime Roles)
-2. EMR Compute (Permission Changes)
-3. EMR Studio (Notebooks)
+2. EMR Studio (Notebooks)
+3. EMR Compute (Permission Changes)
+
 
 ## End-to-End Migration Flow
 
@@ -21,8 +22,8 @@ The following diagram illustrates the end-to-end migration process:
 1. [Prerequisites](#prerequisites)
 2. [Migration Steps](#migration-steps)
    - [2.1 IAM Roles Migration](#21-iam-roles-migration)
-   - [2.2 EMR Compute Migration](#22-emr-compute-migration)
-   - [2.3 Notebooks Migration](#23-notebooks-migration)
+   - [2.2 Notebooks Migration](#23-notebooks-migration)
+   - [2.3 EMR Compute Migration](#22-emr-compute-migration)
 3. [Example Scripts](#example-scripts)
 4. [Best Practices](#best-practices)
 5. [Troubleshooting](#troubleshooting)
@@ -77,7 +78,7 @@ Step 1.2 below shows how to fetch the repo for the project. While the above samp
 
 **Stay Tuned**
 
-### Step 2. Inventory Your EMR Studio Resources
+### Step 2: Inventory Your EMR Studio Resources
 
 - List all notebooks, workspaces, and associated data
 - Identify and Copy Necessary Artifacts for Migration to MaxDome
@@ -180,3 +181,126 @@ b. After running this script, go to the MaxDome portal and perform a git pull fr
 ![Repo](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo.png)
 
 ![Repo2](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo2.png)
+
+
+
+### Step 2: EMR Compute - Update Data Source Connections in Unified Studio
+
+    * Reconfigure data source connections in SageMaker Unified Studio 
+    * Prepare Your EMR Compute for MaxDome Interface/Notebooks
+
+Unified Studio supports two types of connections for EMR compute:
+
+    1. EMR Serverless
+    2. EMR on EC2
+
+Depending on your requirements and existing infrastructure, you'll need to choose and prepare the appropriate EMR compute option for use with MaxDome. Follow the instructions below based on your situation:
+
+#### Option 1: Setting Up New EMR Compute
+
+If you plan to use a new EMR Cluster or Application:
+
+For EMR Serverless:
+
+    * Go to Portal, project → Compute → Data Analytics → Add Compute → EMR Serverless
+
+For EMR on EC2:
+
+    * Go to Portal, project → Compute → Data Analytics → Add Compute → EMR on EC2
+
+
+After completing these steps, your chosen EMR compute resource will be available for use within your project. You can now use this compute environment with notebooks and workflows.
+
+Ensure that your EMR compute has the necessary permissions and network access to interact with other resources in your project, such as S3 buckets or other AWS services.
+
+
+#### Option 2: Using Existing EMR Compute
+
+If you plan to use existing EMR compute resource:
+
+2.1 For existing EMR Serverless applications:
+
+    * Go to Portal, project → Compute → Data Analytics → Add Compute → EMR Serverless
+
+This step will create a connector in your project to establish a connection with an existing EMR Serverless application.
+
+Important Considerations:
+
+[!!!! NOTE] When connecting to an Amazon EMR Serverless application, Unified Studio can only use the project role (also known as the user role) as the runtime role. This differs from EMR Studio, where users can choose from multiple runtime roles. To ensure that migrated EMR Studio notebooks continue to function properly, the project/user role must have the same permissions as the runtime role previously used in EMR Studio.
+
+1. Ensure your EMR Serverless application is using EMR version 7 or later.
+2. Verify that the Livy endpoint is enabled in your EMR Serverless application configuration.
+3. Add the following trust relationship to your MaxDome project/user role:
+
+```
+{
+"Sid": "ServerlessTrustPolicy",
+"Effect": "Allow",
+"Principal": {
+"Service": "emr-serverless.amazonaws.com"
+},
+"Action": "sts:AssumeRole",
+"Condition": {
+"StringLike": {
+"aws:SourceAccount": "121223232323232",
+"aws:SourceArn": "arn:aws:emr-serverless:us-west-2:002519298858:/applications/00fn1sjq936oua0l"
+}
+}
+}
+```
+
+#### Steps to Create the Sagemaker Unified Studio Connector:
+
+1. In your project directory, create a new connection file:
+
+```
+cat<<EOF >/home/**************/<your-project>/<your-domain>/.connections/shared/studio2.spark_emr_serverless.connection
+{
+  "name": "studio2.spark_emr_serverless",
+  "authorizationMode": "PROJECT",
+  "provisioningType": "MANAGED",
+  "domainIdentifier": "dzd_5sppmf8bft9ok0",
+  "projectIdentifier": "6evk5zthkn3jm8",
+  "environmentIdentifier": "4ykqpszj0vefbk",
+  "type": "SPARK_EMR_SERVERLESS",
+  "sparkEmrProperties": {
+    "emrComputeArn": "arn:aws:emr-serverless:us-west-2:002519298858:/applications/00fn1sjq936oua0l"
+  },
+  "location": {
+    "awsRegion": "us-west-2",
+    "awsAccountId": "002519298858"
+  }
+}
+EOF
+```
+
+* Verify the connection is working:
+
+```
+ sagemaker-ui-helper get connection --name studio2.spark_emr_serverless --with-secret
+```
+
+* Push the new connection file to the git repository:
+
+```
+git add --force /home/**************/<your-project>/.connections/shared/studio2.spark_emr_serverless.connection
+git commit -m "Adding a new EMR serverless connection file"
+git push
+```
+
+* Restart the Jupyter server to recognize the new MaxDome connector:
+
+```
+restart-sagemaker-ui-jupyter-server
+```
+
+After completing these steps, open a notebook in Unified Studio. You should now see the new EMR Serverless connector available for selection in the notebook interface. You can now send Python scripts to the EMR Serverless application for execution.
+
+
+For existing EMR on EC2 clusters:
+
+    * [Checklist for ensuring your cluster meets MaxDome requirements]
+    * [Guidelines for modifying existing clusters if needed]
+
+
+Regardless of which option you choose, ensure that your EMR compute environment is properly configured to work seamlessly with Unified Studio's interface and notebooks. This includes setting up appropriate IAM roles, security groups, and network configurations.
