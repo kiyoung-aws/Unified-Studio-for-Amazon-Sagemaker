@@ -40,7 +40,7 @@ Before proceeding with migration, ensure you have:
 
 - Understanding of [Amazon SageMaker Unified Studio](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/adminguide/what-is-sagemaker-unified-studio.html)
 - Access to a [domain](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/adminguide/working-with-domains.html) and a project created in SageMaker Unified Studio (Refer to [Create a new project](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/userguide/create-new-project.html))
-- Python, [boto3](https://pypi.org/project/boto3/) and [nbformat](https://pypi.org/project/nbformat/) installed on the machine where you'll execute migration steps
+- Python, [boto3](https://pypi.org/project/boto3/) installed on the machine where you'll execute migration steps
 - [AWS Command Line Interface (AWS CLI)](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed/updated and configured on the machine where you'll execute migration steps
 - The IAM User/Role performing the steps in this guide should have the following permissions:
 
@@ -74,19 +74,18 @@ Before proceeding with migration, ensure you have:
     ]
 }
 ```
-Step 1.2 below shows how to fetch the repo for the project. While the above sample uses "*” for some of the Resources, consider restricting it according to your security requirements.
 - Add the IAM user/role as the [domain's owner](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/adminguide/user-management.html) and the [project's owner](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/userguide/add-project-members.html) to be able to execute steps in this guide
 
 ## Migration Steps
 
 ### Step 1: IAM Roles (Runtime roles) - Bring your own role
 
-Refer to this [section](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/bring-your-own-role/README.md) for migrating your existing roles into Sagamaker Unified Studio.
+Refer to this [section](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/bring-your-own-role/README.md) for migrating your existing roles into Sagemaker Unified Studio.
 
 ### Step 2: Inventory Your EMR Studio Resources
 
 - List all notebooks, workspaces, and associated data
-- Identify and Copy Necessary Artifacts for Migration to MaxDome
+- Identify and Copy Necessary Artifacts for Migration to Sagemaker Unified Studio
 
 From your SM Unified Studio Project notebook terminal, perform the following steps:
 
@@ -139,10 +138,10 @@ aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-EU1V
 
 ### Step 2. Migrate your notebooks
 
-    * Export notebooks from EMR Studio
-    * Import notebooks into SageMaker Unified Studio
+    - Export notebooks from EMR Studio
+    - Import notebooks into SageMaker Unified Studio
 
-a. Upload the entire folder to the MaxDome project's CodeCommit repository:
+a. Upload the entire folder to the Sagemaker Unified Studio project's CodeCommit repository:
 
 ```
 import os
@@ -181,25 +180,28 @@ parentCommitId=parent_commit_id,
 putFiles=putFilesList)
 ```
 
-b. After running this script, go to the MaxDome portal and perform a git pull from the UI to see the imported files from the EMR workspace:
+b. After running this script, go to the Sagemaker Unified Studio portal and perform a git pull from the UI to see the imported files from the EMR workspace:
 
-![Repo](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo.png)
 
-![Repo2](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo2.png)
-
+<table>
+  <tr>
+    <td><img src="https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo.png" width="400"></td>
+    <td><img src="https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo2.png" width="400"></td>
+  </tr>
+</table>
 
 
 ### Step 2: EMR Compute - Update Data Source Connections in Unified Studio
 
-    * Reconfigure data source connections in SageMaker Unified Studio 
-    * Prepare Your EMR Compute for MaxDome Interface/Notebooks
+    - Reconfigure data source connections in SageMaker Unified Studio 
+    - Prepare Your EMR Compute for Sagemaker Unified Studio Interface/Notebooks
 
 Unified Studio supports two types of connections for EMR compute:
 
     1. EMR Serverless
     2. EMR on EC2
 
-Depending on your requirements and existing infrastructure, you'll need to choose and prepare the appropriate EMR compute option for use with MaxDome. Follow the instructions below based on your situation:
+Depending on your requirements and existing infrastructure, you'll need to choose and prepare the appropriate EMR compute option for use with Sagemaker Unified Studio. Follow the instructions below based on your situation:
 
    #### Option 1: Setting Up New EMR Compute
 
@@ -239,7 +241,7 @@ This step will create a connector in your project to establish a connection with
 
 1. Ensure your EMR Serverless application is using EMR version 7 or later.
 2. Verify that the Livy endpoint is enabled in your EMR Serverless application configuration.
-3. Add the following trust relationship to your MaxDome project/user role:
+3. Add the following trust relationship to your Sagemaker Unified Studio project/user role:
 
 ```
 {
@@ -286,7 +288,7 @@ EOF
 * Verify the connection is working:
 
 ```
-sagemaker-ui-helper get connection --name studio2.spark_emr_serverless --with-secret
+aws datazone get-connection --name studio2.spark_emr_serverless --with-secret
 ```
 
 * Push the new connection file to the git repository:
@@ -297,7 +299,7 @@ git commit -m "Adding a new EMR serverless connection file"
 git push
 ```
 
-* Restart the Jupyter server to recognize the new MaxDome connector:
+* Restart the Jupyter server to recognize the new Sagemaker Unified Studio connector:
 
 ```
 restart-sagemaker-ui-jupyter-server
@@ -308,8 +310,8 @@ After completing these steps, open a notebook in Unified Studio. You should now 
 
 For existing EMR on EC2 clusters:
 
-    * [Checklist for ensuring your cluster meets Sagemaker Unified Studio requirements]
-    * [Guidelines for modifying existing clusters if needed]
+    - [Checklist for ensuring your cluster meets Sagemaker Unified Studio requirements]
+    - [Guidelines for modifying existing clusters if needed]
 
 ![Compute](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/addcompute3.png)
 
