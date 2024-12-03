@@ -320,15 +320,18 @@ Regardless of which option you choose, ensure that your EMR compute environment 
 
 EMR magics are special commands used in notebooks to interact with EMR clusters. The syntax and availability of these magics differ between EMR Studio Notebooks and SageMaker Studio Notebooks. Below is a comparison table showing the differences and, where available, the corresponding equivalents:
 
-EMR Studio Notebook Magic	SageMaker Studio Notebook Equivalent	Notes
-%%sql	%%sql	Available in both environments, but may have slight syntax differences
-%%info	%%info	Use alternative methods to get cluster information
-%%configure	Need connection switch	Change to Local Python and use syntax: %%configure -f —name "YOUR_CONNECTION_NAME"
-%%display	%display	Changed to line magic
-%%spark	Use PySpark directly	In SageMaker, you typically write PySpark code without a specific magic
-%%sparkql	Use Spark SQL API	Write Spark SQL queries using the PySpark SQL API
-%%python	Not needed	Python is the default in SageMaker notebooks
-%execute-notebook	Not available	Use alternative methods for notebook-level operations
-%mount_workspace_dir	Not available	Use alternative methods for notebook-level operations
-%generate_s3_download_url	Not available	Use alternative methods for notebook-level operations
+
+| EMR Studio Notebook Magic | SageMaker Studio Notebook Equivalent | Notes |
+| ------------------------- | ------------------------------------ | ----- |
+| %%sql                     | %%sql                                | Available in both environments, but may have slight syntax differences |
+| %%info                    | %%info                               | Use alternative methods to get cluster information |
+| %%configure               | Need connection switch               | Change to Local Python and use syntax: %%configure -f —name "YOUR_CONNECTION_NAME" |
+| %%display                 | %display                             | Changed to line magic |
+| %%spark                   | Use PySpark directly                 | In SageMaker, you typically write PySpark code without a specific magic |
+| %%sparkql                 | Use Spark SQL API                    | Write Spark SQL queries using the PySpark SQL API |
+| %%python                  | Not needed                           | Python is the default in SageMaker notebooks |
+| %execute-notebook         | Not available                        | Use alternative methods for notebook-level operations |
+| %mount_workspace_dir      | Not available                        | Use alternative methods for notebook-level operations |
+| %generate_s3_download_url | Not available                        | Use alternative methods for notebook-level operations |
+
 
