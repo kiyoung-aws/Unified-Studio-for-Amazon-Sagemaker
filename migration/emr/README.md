@@ -4,6 +4,14 @@
 
 This guide provides step-by-step instructions and example script samples to help you migrate from Amazon EMR Studio to SageMaker Unified Studio for Data Processing. These resources will assist you in creating SageMaker Unified Studio for Data Processing projects in AWS Organization Member accounts.
 
+## Considerations and Limitations
+
+All project members can access saved notebooks migrated to a project
+Sagemaker Unified Studio does not support EMR Studio Notebooks with multiple runtime roles, yet (But can be worked around with connections).
+Migration of existing IAM Runtime roles into Project User role is not supported (yet).
+You can configure one IAM (user) role per project following below instructions
+
+
 ## The migration process focuses on three key areas:
 
 1. IAM Roles (Runtime Roles)
