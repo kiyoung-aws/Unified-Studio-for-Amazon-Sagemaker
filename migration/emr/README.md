@@ -159,25 +159,26 @@ emr_workspace_id = "e-EU1V9IEQBY4ZWRIVS6GGH2MV7"
 putFilesList = []
 
 for (root, folders, files) in os.walk(local_folder):
-for file in files:
-file_path = os.path.join(root, file)
-print("Local file: " + file_path)
-print("Uploading to: " + str(file_path).replace(local_folder, f'emr_notebooks/{emr_studio_id}/{emr_workspace_id}'))
+    for file in files:
+        file_path = os.path.join(root, file)
+        print("Local file: " + file_path)
+        print("Uploading to: " + str(file_path).replace(local_folder, f'emr_notebooks/{emr_studio_id}/{emr_workspace_id}'))
 
-with open(file_path, mode='r+b') as file_obj:
-file_content = file_obj.read()
-putFileEntry = {
-'filePath': str(file_path).replace(local_folder, f'emr_notebooks/{emr_studio_id}/{emr_workspace_id}'),
-'fileContent': file_content
-}
-putFilesList.append(putFileEntry)
+        with open(file_path, mode='r+b') as file_obj:
+            file_content = file_obj.read()
+            putFileEntry = {
+                'filePath': str(file_path).replace(local_folder, f'emr_notebooks/{emr_studio_id}/{emr_workspace_id}'),
+                'fileContent': file_content
+            }
+            putFilesList.append(putFileEntry)
 
 parent_commit_id = code_commit.get_branch(repositoryName=repo, branchName=branch).get("branch").get("commitId")
 code_commit.create_commit(
-repositoryName=repo,
-branchName=branch,
-parentCommitId=parent_commit_id,
-putFiles=putFilesList)
+    repositoryName=repo,
+    branchName=branch,
+    parentCommitId=parent_commit_id,
+    putFiles=putFilesList
+)
 ```
 
 b. After running this script, go to the Sagemaker Unified Studio portal and perform a git pull from the UI to see the imported files from the EMR workspace:
