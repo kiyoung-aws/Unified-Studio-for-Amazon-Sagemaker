@@ -75,16 +75,61 @@ Step 1.2 below shows how to fetch the repo for the project. While the above samp
 
 ### Step 1: IAM Roles (Runtime roles) - Bring your own role
 
-**Pending**
+**Stay Tuned**
 
-#### 1. Inventory Your EMR Studio Resources
+### Step 2. Inventory Your EMR Studio Resources
 
 - List all notebooks, workspaces, and associated data
 - Identify and Copy Necessary Artifacts for Migration to MaxDome
 
-From your MaxDome Project notebook terminal, perform the following steps:
+From your SM Unified Studio Project notebook terminal, perform the following steps:
+
+![Terminal]([https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/raw/main/migration/emr/img/e2e.png](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/terminal.png))
 
 a. Describe the EMR Studio by its ID to get the Default S3 location:
 
 ```bash
 aws emr describe-studio --studio-id es-D5G4WREET32JMJ0W90RN686KH
+```
+
+Example output:
+
+```
+{
+"Studio": {
+"StudioId": "es-D5G4WREET32JMJ0W90RN686KH",
+"StudioArn": "arn:aws:elasticmapreduce:us-west-2:XXXXXXXXXX:studio/es-D5G4WREET32JMJ0W90RN686KH",
+"Name": "Studio_2",
+"Description": "",
+"AuthMode": "IAM",
+"ServiceRole": "arn:aws:iam::XXXXXXXXXX:role/service-role/AmazonEMRStudio_ServiceRole_1728498237293",
+"Url": "https://es-D5G4WREET32JMJ0W90RN686KH.emrstudio-prod.us-west-2.amazonaws.com",
+"CreationTime": "2024-10-09T11:24:12.396000-07:00",
+"DefaultS3Location": "s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY",
+"Tags": [],
+"IdcUserAssignment": "null"
+}
+}
+```
+b. List S3 default path to identify workspace folders:
+
+NOTE: You might have more than one studio workspace. You have the option to migrate all notebooks across workspaces if your organization allows combining them together, or you can choose to migrate a specific workspace based on your needs. Consider your organization's policies and project requirements when deciding which workspaces to migrate.
+If you decide to migrate all workspaces, you'll need to repeat the following steps for each workspace. If you're migrating a specific workspace, choose the appropriate workspace folder in the next step.
+
+```
+aws s3 ls s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/
+```
+
+Example output:
+```
+                           PRE e-7QX2VHPYXESC65FUUC1WDT0E2/
+                           PRE e-EU1V9IEQBY4ZWRIVS6GGH2MV7/
+```
+c. Download an entire sub-folder to your local machine:
+
+```
+aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-EU1V9IEQBY4ZWRIVS6GGH2MV7/ emr_workspace_files/e-EU1V9IEQBY4ZWRIVS6GGH2MV7
+```
+
+
+
