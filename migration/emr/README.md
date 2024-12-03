@@ -333,5 +333,5 @@ EMR magics are special commands used in notebooks to interact with EMR clusters.
 | %execute-notebook         | Not available                        | Use alternative methods for notebook-level operations |
 | %mount_workspace_dir      | Not available                        | Use alternative methods for notebook-level operations |
 | %generate_s3_download_url | Not available                        | Use alternative methods for notebook-level operations |
-
+| %matplotlib               | Not available                        | Use alternative methods for notebook-level operations |
 
