@@ -2,9 +2,24 @@
 
 A utility script for Bring Your Own IAM Role in SageMaker Unified Studio projects. This tool helps configure permissions and customize role assignments for SageMaker Unified Studio environments.
 
-# What You need to Be Aware Of Before Executing the Script
-- The script can stop all running jobs within your Project, so make sure you have saved everything, and no job is in running status before moving forward.
-- Similar as above, please make sure you don't have any resource creation in progress within the Unified Studio Project, otherwise the script execution may fail too.
+# Important Prerequisites and Considerations
+## Resource Creation
+The BYOR (Bring Your Own Role) role replacement functionality will prevent successful creation of new resources, including:
+- Amazon EMR Cluster on EC2
+- Amazon EMR Serverless
+- Amazon Redshift Serverless
+- Workflow environments
+## Job Management
+Before proceeding with the script execution:
+1. Ensure all running jobs in your Project have been properly saved and completed
+2. Verify that no jobs are currently in a mutating state
+3. Any unsaved work may be lost during this process
+## Resource Creation Status
+To ensure successful script execution:
+- Verify that no resource creation operations are currently in progress within your Unified Studio Project
+- Any ongoing resource creation processes may interfere with and cause the script execution to fail
+
+**Note:** Please review above requirements carefully before proceeding with the script execution.
 
 ## Prerequisites
 
