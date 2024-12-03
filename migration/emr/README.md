@@ -94,7 +94,7 @@ From your SM Unified Studio Project notebook terminal, perform the following ste
 a. Describe the EMR Studio by its ID to get the Default S3 location:
 
 ```bash
-aws emr describe-studio --studio-id es-D5G4WREET32JMJ0W90RN686KH
+aws emr describe-studio --studio-id es-XXXXX
 ```
 
 Example output:
@@ -102,8 +102,8 @@ Example output:
 ```
 {
 "Studio": {
-"StudioId": "es-XXX",
-"StudioArn": "arn:aws:elasticmapreduce:us-west-2:XXXXXXXXXX:studio/es-XXXX",
+"StudioId": "es-XXXXX",
+"StudioArn": "arn:aws:elasticmapreduce:us-west-2:XXXXXXXXXX:studio/es-XXXXX",
 "Name": "Studio_2",
 "Description": "",
 "AuthMode": "IAM",
@@ -127,13 +127,13 @@ aws s3 ls s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/
 
 Example output:
 ```
-                           PRE e-XXXX/
-                           PRE e-YYYY/
+                           PRE e-XXXXX/
+                           PRE e-YYYYY/
 ```
 c. Download an entire sub-folder to your local machine:
 
 ```
-aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-XXXX/ emr_workspace_files/e-XXXX
+aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-XXXXX/ emr_workspace_files/e-XXXXX
 ```
 
 ### Step 2. Migrate your notebooks
@@ -153,8 +153,8 @@ repo = "src"
 branch = "main"
 
 local_folder = "/Users/<YOUR_USER_ID>/emr_workspace_files/e-XXXX"
-emr_studio_id = "es-XXXX"
-emr_workspace_id = "e-XXXX"
+emr_studio_id = "es-XXXXX"
+emr_workspace_id = "e-XXXXX"
 
 putFilesList = []
 
