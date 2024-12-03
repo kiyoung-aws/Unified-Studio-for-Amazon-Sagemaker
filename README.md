@@ -1,4 +1,10 @@
 ## Amazon SageMaker Unified Studio (Preview)
+
+<div style="background-color: #FFFF00; padding: 10px; border-radius: 5px;">
+<strong>Note:</strong> Amazon SageMaker Unified Studio is in preview release and is subject to change.
+</div>
+
+
 This repository contains utilities for Amazon SageMaker Unified Studio (Preview). It is structured as follows:
 - Migration 
     - Migrate [Amazon Athena](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/tree/main/migration/athena) and [Amazon EMR](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/tree/main/migration/emr) resources to SageMaker Unified Studio project. 
