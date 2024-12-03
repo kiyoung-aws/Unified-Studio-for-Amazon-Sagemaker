@@ -84,7 +84,7 @@ Step 1.2 below shows how to fetch the repo for the project. While the above samp
 
 From your SM Unified Studio Project notebook terminal, perform the following steps:
 
-![Terminal]([https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/raw/main/migration/emr/img/e2e.png](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/terminal.png))
+![Terminal](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/terminal.png))
 
 a. Describe the EMR Studio by its ID to get the Default S3 location:
 
