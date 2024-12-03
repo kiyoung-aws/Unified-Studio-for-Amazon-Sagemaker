@@ -5,9 +5,9 @@ A utility script for Bring Your Own IAM Role in SageMaker Unified Studio project
 # Important Prerequisites and Considerations
 ## Resource Creation
 The BYOR (Bring Your Own Role) role replacement functionality will prevent successful creation of new resources, including:
-- Amazon EMR on EC2 clusters
-- Amazon EMR Serverless applications
-- Amazon Redshift clusters
+- Amazon EMR Cluster on EC2
+- Amazon EMR Serverless
+- Amazon Redshift Serverless
 - Workflow environments
 ## Job Management
 Before proceeding with the script execution:
