@@ -29,13 +29,10 @@ The following diagram illustrates the end-to-end migration process:
 
 1. [Prerequisites](#prerequisites)
 2. [Migration Steps](#migration-steps)
-   - [2.1 IAM Roles Migration](#21-iam-roles-migration)
-   - [2.2 Notebooks Migration](#23-notebooks-migration)
-   - [2.3 EMR Compute Migration](#22-emr-compute-migration)
-3. [Example Scripts](#example-scripts)
-4. [Best Practices](#best-practices)
-5. [Troubleshooting](#troubleshooting)
-6. [Additional Resources](#additional-resources)
+   - [2.1 IAM Roles Migration](#Step-1:-IAM-Roles-(Runtime-roles)---Bring-your-own-role)
+   - [2.2 Notebooks Migration](#Step-3.-Migrate-your-notebooks)
+   - [2.3 EMR Compute Migration](#Step-2:-EMR-Compute---Update-Data-Source-Connections-in-Unified-Studio)
+
 
 ## Prerequisites
 
