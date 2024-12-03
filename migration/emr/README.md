@@ -286,7 +286,7 @@ EOF
 * Verify the connection is working:
 
 ```
-sagemaker-ui-helper get connection --name studio2.spark_emr_serverless --with-secret
+aws datazone get-connection --name studio2.spark_emr_serverless --with-secret
 ```
 
 * Push the new connection file to the git repository:
