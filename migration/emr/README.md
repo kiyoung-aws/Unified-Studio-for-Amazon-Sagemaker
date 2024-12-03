@@ -137,7 +137,7 @@ c. Download an entire sub-folder to your local machine:
 aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-EU1V9IEQBY4ZWRIVS6GGH2MV7/ emr_workspace_files/e-EU1V9IEQBY4ZWRIVS6GGH2MV7
 ```
 
-### Step 3. Migrate your notebooks
+### Step 2. Migrate your notebooks
 
     * Export notebooks from EMR Studio
     * Import notebooks into SageMaker Unified Studio
