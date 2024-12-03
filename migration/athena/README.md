@@ -31,9 +31,11 @@ Before proceeding with migration, ensure you have:
         {
             "Effect": "Allow",
             "Action": [
-                elasticmapreduce:GetClusterSessionCredentials
+                "athena:ListNamedQueries",
+                "athena:GetNamedQuery",
+                "athena:TagResource"
             ],
-           "arn:aws:elasticmapreduce:<region>:<aws-account-id>:cluster/*"
+            "Resource": "arn:aws:athena:<region>:<aws-account-id>:workgroup/<your-workgroup-name>"
         },
         {
             "Effect": "Allow",
