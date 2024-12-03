@@ -131,5 +131,51 @@ c. Download an entire sub-folder to your local machine:
 aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-EU1V9IEQBY4ZWRIVS6GGH2MV7/ emr_workspace_files/e-EU1V9IEQBY4ZWRIVS6GGH2MV7
 ```
 
+### Step 3. Migrate your notebooks
 
+    * Export notebooks from EMR Studio
+    * Import notebooks into SageMaker Unified Studio
 
+a. Upload the entire folder to the MaxDome project's CodeCommit repository:
+
+```
+import os
+import boto3
+
+code_commit = boto3.client('codecommit')
+
+repo = "src"
+branch = "main"
+
+local_folder = "/Users/<YOUR_USER_ID>/emr_workspace_files/e-EU1V9IEQBY4ZWRIVS6GGH2MV7"
+emr_studio_id = "es-D5G4WREET32JMJ0W90RN686KH"
+emr_workspace_id = "e-EU1V9IEQBY4ZWRIVS6GGH2MV7"
+
+putFilesList = []
+
+for (root, folders, files) in os.walk(local_folder):
+for file in files:
+file_path = os.path.join(root, file)
+print("Local file: " + file_path)
+print("Uploading to: " + str(file_path).replace(local_folder, f'emr_notebooks/{emr_studio_id}/{emr_workspace_id}'))
+
+with open(file_path, mode='r+b') as file_obj:
+file_content = file_obj.read()
+putFileEntry = {
+'filePath': str(file_path).replace(local_folder, f'emr_notebooks/{emr_studio_id}/{emr_workspace_id}'),
+'fileContent': file_content
+}
+putFilesList.append(putFileEntry)
+
+parent_commit_id = code_commit.get_branch(repositoryName=repo, branchName=branch).get("branch").get("commitId")
+code_commit.create_commit(
+repositoryName=repo,
+branchName=branch,
+parentCommitId=parent_commit_id,
+putFiles=putFilesList)
+```
+
+b. After running this script, go to the MaxDome portal and perform a git pull from the UI to see the imported files from the EMR workspace:
+
+![Repo](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo.png)
+![Repo2](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/repo2.png)
