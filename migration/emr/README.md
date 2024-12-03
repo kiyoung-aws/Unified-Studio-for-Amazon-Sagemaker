@@ -196,17 +196,21 @@ Unified Studio supports two types of connections for EMR compute:
 
 Depending on your requirements and existing infrastructure, you'll need to choose and prepare the appropriate EMR compute option for use with MaxDome. Follow the instructions below based on your situation:
 
-#### Option 1: Setting Up New EMR Compute
+   #### Option 1: Setting Up New EMR Compute
 
 If you plan to use a new EMR Cluster or Application:
 
 For EMR Serverless:
 
-    * Go to Portal, project → Compute → Data Analytics → Add Compute → EMR Serverless
+     Go to Portal, project → Compute → Data Analytics → Add Compute → EMR Serverless
 
 For EMR on EC2:
 
-    * Go to Portal, project → Compute → Data Analytics → Add Compute → EMR on EC2
+     Go to Portal, project → Compute → Data Analytics → Add Compute → EMR on EC2
+
+![Compute](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/addcompute.png)
+
+![Compute](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/addcompute2.png)
 
 
 After completing these steps, your chosen EMR compute resource will be available for use within your project. You can now use this compute environment with notebooks and workflows.
@@ -214,19 +218,19 @@ After completing these steps, your chosen EMR compute resource will be available
 Ensure that your EMR compute has the necessary permissions and network access to interact with other resources in your project, such as S3 buckets or other AWS services.
 
 
-#### Option 2: Using Existing EMR Compute
+   #### Option 2: Using Existing EMR Compute
 
 If you plan to use existing EMR compute resource:
 
 2.1 For existing EMR Serverless applications:
 
-    * Go to Portal, project → Compute → Data Analytics → Add Compute → EMR Serverless
+     Go to Portal, project → Compute → Data Analytics → Add Compute → EMR Serverless
 
 This step will create a connector in your project to establish a connection with an existing EMR Serverless application.
 
-Important Considerations:
+#### Important Considerations:
 
-[!!!! NOTE] When connecting to an Amazon EMR Serverless application, Unified Studio can only use the project role (also known as the user role) as the runtime role. This differs from EMR Studio, where users can choose from multiple runtime roles. To ensure that migrated EMR Studio notebooks continue to function properly, the project/user role must have the same permissions as the runtime role previously used in EMR Studio.
+[NOTE] When connecting to an Amazon EMR Serverless application, Unified Studio can only use the project role (also known as the user role) as the runtime role. This differs from EMR Studio, where users can choose from multiple runtime roles. To ensure that migrated EMR Studio notebooks continue to function properly, the project/user role must have the same permissions as the runtime role previously used in EMR Studio.
 
 1. Ensure your EMR Serverless application is using EMR version 7 or later.
 2. Verify that the Livy endpoint is enabled in your EMR Serverless application configuration.
@@ -264,11 +268,11 @@ cat<<EOF >/home/**************/<your-project>/<your-domain>/.connections/shared/
   "environmentIdentifier": "4ykqpszj0vefbk",
   "type": "SPARK_EMR_SERVERLESS",
   "sparkEmrProperties": {
-    "emrComputeArn": "arn:aws:emr-serverless:us-west-2:002519298858:/applications/00fn1sjq936oua0l"
+    "emrComputeArn": "arn:aws:emr-serverless:<region>2:XXXXXXXXXXX:/applications/yyyyyyyyyy"
   },
   "location": {
-    "awsRegion": "us-west-2",
-    "awsAccountId": "002519298858"
+    "awsRegion": "<region>",
+    "awsAccountId": "XXXXXXXXXXX"
   }
 }
 EOF
@@ -277,7 +281,7 @@ EOF
 * Verify the connection is working:
 
 ```
- sagemaker-ui-helper get connection --name studio2.spark_emr_serverless --with-secret
+sagemaker-ui-helper get connection --name studio2.spark_emr_serverless --with-secret
 ```
 
 * Push the new connection file to the git repository:
@@ -299,8 +303,9 @@ After completing these steps, open a notebook in Unified Studio. You should now 
 
 For existing EMR on EC2 clusters:
 
-    * [Checklist for ensuring your cluster meets MaxDome requirements]
+    * [Checklist for ensuring your cluster meets Sagemaker Unified Studio requirements]
     * [Guidelines for modifying existing clusters if needed]
 
+![Compute](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/addcompute3.png)
 
 Regardless of which option you choose, ensure that your EMR compute environment is properly configured to work seamlessly with Unified Studio's interface and notebooks. This includes setting up appropriate IAM roles, security groups, and network configurations.
