@@ -60,7 +60,7 @@ def _update_trust_policy(role_name, new_trust_policy, iam_client, execute_flag):
     else:
         print(f"New trust policy for role `{role_name}` would be:")
         pprint(new_trust_policy)
-        print(f"Trust policy update skipped for role: `{role_name}`, set execute flag to True to do the actual update.\n")
+        print(f"Trust policy update skipped for role: `{role_name}`, set --execute flag to True to do the actual update.\n")
 
 # Custom managed Policy may contain project user role's Arn, we need to update policy content with BYOR role when necessary
 # We will only do the change for both
@@ -95,7 +95,7 @@ def _copy_managed_policies_arn(source_role, dest_role, environment_id_list, iam_
                         )
                         print(f"Successfully updated policy {policy['PolicyName']} with new version after replacing execution role content.")
                     else:
-                        print(f"Policy {policy['PolicyName']} update skipped, set execute flag to True to do the actual update.\n")
+                        print(f"Policy {policy['PolicyName']} update skipped, set --execute flag to True to do the actual update.\n")
 
     if execute_flag:
         for policy_arn in policies_to_attach:
@@ -107,7 +107,7 @@ def _copy_managed_policies_arn(source_role, dest_role, environment_id_list, iam_
     else:
         print(f"Managed policies to attach to role `{dest_role['Role']['RoleName']}` would be:")
         pprint(policies_to_attach)
-        print(f"Managed policies attach skipped for role: `{dest_role['Role']['RoleName']}`, set execute flag to True to do the actual update.\n")
+        print(f"Managed policies attach skipped for role: `{dest_role['Role']['RoleName']}`, set --execute flag to True to do the actual update.\n")
 
 def _copy_inline_policies_arn(source_role, dest_role, iam_client, execute_flag):
     paginator = iam_client.get_paginator('list_role_policies')
@@ -126,7 +126,7 @@ def _copy_inline_policies_arn(source_role, dest_role, iam_client, execute_flag):
             else:
                 print(f"New inline policy `{policy_name}` would be copied to role `{dest_role['Role']['RoleName']}` is:")
                 pprint(policy_document)
-                print(f"Skipping copy new inline policy `{policy_name}` to role `{dest_role['Role']['RoleName']}`, set execute flag to True to do the actual copy.\n")
+                print(f"Skipping copy new inline policy `{policy_name}` to role `{dest_role['Role']['RoleName']}`, set --execute flag to True to do the actual copy.\n")
     if execute_flag:
         print(f"Successfully copied inline policies to role: `{dest_role['Role']['RoleName']}`\n")
  
@@ -148,7 +148,7 @@ def _copy_tags(source_role_name, dest_role_name, iam_client, execute_flag):
     else:
         print(f"Tags to copy to role `{dest_role_name}` would be:")
         pprint(tags_to_copy)
-        print(f"Tags copy skipped for role: `{dest_role_name}`, set execute flag to True to do the actual update.\n")
+        print(f"Tags copy skipped for role: `{dest_role_name}`, set --execute flag to True to do the actual update.\n")
 
 class EnvironmentWithRole:
     def __init__(self, name, id, user_role_arn):
@@ -333,7 +333,7 @@ def _copy_lakeformation_grants(lakeformation, source_role_arn, destination_role_
         else:
             print(f"Skipping copy LakeFormation Grant:")
             pprint(grant_to_copy)
-            print(f"to new role: {destination_role_arn}, set execute flag to True to do the actual update.\n")
+            print(f"to new role: {destination_role_arn}, set --execute flag to True to do the actual update.\n")
 
 def _copy_lakeformation_opt_ins(lakeformation, source_role_arn, destination_role_arn, execute_flag):
     print(f"Checking and copying lakeformation opt ins associated with role `{source_role_arn}` to role `{destination_role_arn}`...\n")
@@ -373,7 +373,7 @@ def _copy_lakeformation_opt_ins(lakeformation, source_role_arn, destination_role
         else:
             print(f"Skipping copy LakeFormation Opt In:")
             pprint(opt_in_to_copy)
-            print(f"to new role: {destination_role_arn}, set execute flag to True to do the actual update.\n")
+            print(f"to new role: {destination_role_arn}, set --execute flag to True to do the actual update.\n")
 
 def _find_sagemaker_domain_id(sagemaker_client, args):
     project_id = args.project_id
@@ -460,7 +460,7 @@ def _stop_apps_under_domain(sagemaker_client, sagemaker_domain_id, execute_flag)
                     else:
                         raise e
             else:
-                print(f"Skipping stop app {app['AppName']}, set execute flag to True to do the actual update")
+                print(f"Skipping stop app {app['AppName']}, set --execute flag to True to do the actual update")
 
 
 def _update_domain_execution_role(sagemaker, domain_id, bring_in_role_arn, execute_flag):
@@ -477,7 +477,7 @@ def _update_domain_execution_role(sagemaker, domain_id, bring_in_role_arn, execu
         )
         print(f"Updated Project's SageMaker Domain id: {domain_id} default execution role to {bring_in_role_arn} successfully\n")
     else:
-        print(f"Skipping update Project's SageMaker Domain id: {domain_id} default execution role, set execute flag to True to do the actual update\n")
+        print(f"Skipping update Project's SageMaker Domain id: {domain_id} default execution role, set --execute flag to True to do the actual update\n")
 
 def _add_common_arguments(parser):
     parser.add_argument('--domain-id',
@@ -496,9 +496,6 @@ def _add_common_arguments(parser):
     parser.add_argument('--region',
                         help='Region where you have your Project',
                         required=False)
-    parser.add_argument('--endpoint',
-                        help='Endpoint where you have your Project',
-                        required=False)
 
 def _parse_args():
     parser = argparse.ArgumentParser(description='Tool which grant your role ability to work for specified Project.')
@@ -506,6 +503,10 @@ def _parse_args():
 
     # Parser for use-your-own-role command
     parser_use_own_role = subparsers.add_parser(ROLE_REPLACEMENT, help='Enhance your own role to use.')
+    parser_use_own_role.add_argument('--force-update',
+                        help='WARNING: Setting this flag to True allows the script to stop existing resources. Only use if you explicitly accept compute resources stopping.',
+                        action='store_true',
+                        default=False)
     _add_common_arguments(parser_use_own_role)
         
     # Parser for enhance-project-role command
@@ -522,11 +523,7 @@ def byor_main():
     datazone = session.client('datazone')
     lakeformation = session.client('lakeformation')
     sagemaker = session.client('sagemaker')
-    if args.region and args.endpoint:
-        datazone = session.client('datazone',
-                                    region_name=args.region,
-                                    endpoint_url=args.endpoint)
-    elif args.region:
+    if args.region:
         datazone = session.client('datazone',
                                     region_name=args.region)
         lakeformation = session.client('lakeformation',
@@ -562,7 +559,10 @@ def byor_main():
         
         # Replace SageMaker Domain Execution Role
         sagemaker_domain_id = _find_sagemaker_domain_id(sagemaker, args)
-        _stop_apps_under_domain(sagemaker, sagemaker_domain_id, args.execute)
+        if args.force_update:
+            _stop_apps_under_domain(sagemaker, sagemaker_domain_id, args.execute)
+        else:
+            print(f"WARNING: Updating SageMaker Domain without deleting existing apps. The script execution may fail if there are running apps. Set --force-update flag if you accept app deletion to ensure successful script execution.")
         _update_domain_execution_role(sagemaker, sagemaker_domain_id, args.bring_in_role_arn, args.execute)
 
         # Replace Project Execution Role with BYOR Role
@@ -609,7 +609,7 @@ def byor_main():
                     )
                     raise e
             else:
-                print(f"Skipping disassociate and associate role operations, set execute flag to True to do the actual update. environment {environment.name} still use {environment.user_role_arn} as its role.\n")
+                print(f"Skipping disassociate and associate role operations, set --execute flag to True to do the actual update. environment {environment.name} still use {environment.user_role_arn} as its role.\n")
                 
         if args.execute:
             print(f"Successfully replace Project {args.project_id} user role with your own role: {byor_role['Role']['Arn']}")
