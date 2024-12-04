@@ -309,10 +309,8 @@ def _copy_lakeformation_grants(lakeformation, source_role_arn, destination_role_
                 grants_list_to_copy.append(grant)
     if not grants_list_to_copy:
         if script_option == ROLE_REPLACEMENT:
-            # Auto generated Project role has grants associated with it for sure, raise exception when finding nothing
-            raise Exception(f"No grants found associated with role {source_role_arn}, please make sure you added script executor as LakeFormation Data lake administrators properly.\n")
-        elif script_option == ROLE_ENHANCEMENT:
-            print(f"No grants found associated with role {source_role_arn}, skipping copy... Please make sure you added script executor as LakeFormation Data lake administrators properly.\n")
+            # Auto generated Project role has grants associated with it in some project profiles but not all, log out warn message
+            print(f"WARN: No grants found associated with role {source_role_arn}, skipping copy... Please make sure you added script executor as LakeFormation Data lake administrators properly.\n")
 
     for grant_to_copy in grants_list_to_copy:
         print(f"Copying LakeFormation Grant:")
@@ -383,7 +381,6 @@ def _find_sagemaker_domain_id(sagemaker_client, args):
             if f"SageMakerUnifiedStudio-{project_id}" in domain['DomainName']:
                 print(f"Found Project's SageMaker Domain, name: {domain['DomainName']}, id: {domain['DomainId']}\n")
                 return domain['DomainId']
-    raise ValueError(f"Could not find Project's SageMaker Domain under Project `{project_id}`")
 
 def _wait_for_sagemaker_app_deletion(sagemaker,
                                     domain_id,
@@ -518,7 +515,6 @@ def _parse_args():
 def byor_main():
     args = _parse_args()
     session = boto3.Session()
-    session._loader.search_paths.insert(0, "/local/home/ruinon/workspaceBYORScript/src/BringYourOwnRoleScriptDevelopment/src/lakeformation-2017-03-31.normal.json")
     iam_client = session.client('iam')
     datazone = session.client('datazone')
     lakeformation = session.client('lakeformation')
@@ -559,11 +555,12 @@ def byor_main():
         
         # Replace SageMaker Domain Execution Role
         sagemaker_domain_id = _find_sagemaker_domain_id(sagemaker, args)
-        if args.force_update:
-            _stop_apps_under_domain(sagemaker, sagemaker_domain_id, args.execute)
-        else:
-            print(f"WARNING: Updating SageMaker Domain without deleting existing apps. The script execution may fail if there are running apps. Set --force-update flag if you accept app deletion to ensure successful script execution.")
-        _update_domain_execution_role(sagemaker, sagemaker_domain_id, args.bring_in_role_arn, args.execute)
+        if sagemaker_domain_id:
+            if args.force_update:
+                _stop_apps_under_domain(sagemaker, sagemaker_domain_id, args.execute)
+            else:
+                print(f"WARNING: Updating SageMaker Domain without deleting existing apps. The script execution may fail if there are running apps. Set --force-update flag if you accept app deletion to ensure successful script execution.")
+            _update_domain_execution_role(sagemaker, sagemaker_domain_id, args.bring_in_role_arn, args.execute)
 
         # Replace Project Execution Role with BYOR Role
         # Role is attached with environment, and one Project contains multiple environments, so 
