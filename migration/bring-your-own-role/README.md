@@ -105,7 +105,9 @@ Before using this script, ensure you have appropriate permissions configured thr
                 "lakeformation:GrantPermissions",
                 "lakeformation:ListLakeFormationOptIns",
                 "lakeformation:ListPermissions",
-                "lakeformation:CreateLakeFormationOptIn"
+                "lakeformation:CreateLakeFormationOptIn",
+                "lakeformation:ListResources",
+                "lakeformation:UpdateResource"
             ],
             "Resource": "*"
         },
