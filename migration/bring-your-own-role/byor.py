@@ -139,7 +139,7 @@ def _copy_tags(source_role_name, dest_role_name, iam_client, execute_flag):
                 tag['Value'] = dest_role_name
                 print(f"Update IAM Role's tag {tag['Key']} value from {source_role_name} to {dest_role_name}\n")
             tags_to_copy.append(tag)
-    if execute_flag:
+    if tags_to_copy and execute_flag:
         iam_client.tag_role(
             RoleName=dest_role_name,
             Tags=tags_to_copy
@@ -475,8 +475,8 @@ def _update_domain_execution_role(sagemaker, domain_id, bring_in_role_arn, execu
     else:
         print(f"Skipping update Project's SageMaker Domain id: {domain_id} default execution role, set --execute flag to True to do the actual update\n")
 
-def _update_s3_lakeformation_registration(lakeformation, bring_in_role_arn, project_role, execute_flag):
-    print(f"Updating lakeformation resource registered with role: `{project_role['Role']['Arn']}` to role `{bring_in_role_arn}`...\n")
+def _update_s3_lakeformation_registration(lakeformation, old_role_arn, new_role_arn, execute_flag):
+    print(f"Updating lakeformation resource registered with role: `{old_role_arn}` to role `{new_role_arn}`...\n")
     resources_list = []
     response = lakeformation.list_resources(
         FilterConditionList=[
@@ -484,7 +484,7 @@ def _update_s3_lakeformation_registration(lakeformation, bring_in_role_arn, proj
                 'Field': 'ROLE_ARN',
                 'ComparisonOperator': 'EQ',
                 'StringValueList': [
-                    project_role['Role']['Arn'],
+                    old_role_arn,
                 ]
             },
         ]
@@ -498,7 +498,7 @@ def _update_s3_lakeformation_registration(lakeformation, bring_in_role_arn, proj
                     'Field': 'ROLE_ARN',
                     'ComparisonOperator': 'EQ',
                     'StringValueList': [
-                        project_role['Role']['Arn'],
+                        old_role_arn,
                     ]
                 },
             ]
@@ -508,12 +508,12 @@ def _update_s3_lakeformation_registration(lakeformation, bring_in_role_arn, proj
     for resource in resources_list:
         if execute_flag:
             lakeformation.update_resource(
-                RoleArn=bring_in_role_arn,
+                RoleArn=new_role_arn,
                 ResourceArn=resource['ResourceArn']
             )
-            print(f"Successfully updated LakeFormation Resource: `{resource['ResourceArn']}` by updating RoleArn to `{bring_in_role_arn}` successfully\n")
+            print(f"Successfully updated LakeFormation Resource: `{resource['ResourceArn']}` by updating RoleArn to `{new_role_arn}` successfully\n")
         else:
-            print(f"Skipping updating LakeFormation Resource: `{resource['ResourceArn']}` by updating RoleArn to `{bring_in_role_arn}`, set --execute flag to True to do the actual update.\n")
+            print(f"Skipping updating LakeFormation Resource: `{resource['ResourceArn']}` by updating RoleArn to `{new_role_arn}`, set --execute flag to True to do the actual update.\n")
     
 def _add_common_arguments(parser):
     parser.add_argument('--domain-id',
@@ -602,7 +602,7 @@ def byor_main():
             _update_domain_execution_role(sagemaker, sagemaker_domain_id, args.bring_in_role_arn, args.execute)
 
         # Update LakeFormation Data lake locations resources with the new Role
-        _update_s3_lakeformation_registration(lakeformation, args.bring_in_role_arn, project_role, args.execute)
+        _update_s3_lakeformation_registration(lakeformation, project_role['Role']['Arn'], args.bring_in_role_arn, args.execute)
         # Replace Project Execution Role with BYOR Role
         # Role is attached with environment, and one Project contains multiple environments, so 
         # we need to replace role for each environment within a project
