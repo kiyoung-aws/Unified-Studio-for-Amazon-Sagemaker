@@ -11,6 +11,10 @@ This guide provides step-by-step instructions and example script samples to help
 - Migration of existing IAM Runtime roles into Project User role is not supported (yet)
 - You can configure one IAM (user) role per project following below instructions
 - [AWS CloudShell](https://aws.amazon.com/cloudshell/) is the preferred Unix shell environment for running these commands.
+- IMPORTANT: EMR Security Requirements
+  EMR on EC2 clusters must have a security configuration with in-transit encryption enabled before they can be onboarded to SageMaker Studio. This is a mandatory prerequisite.
+- Adding Existing EMR Serverless Applications as Compute will be available later Sagemaker Unified Studio release.
+
 
 
 ## The migration process focuses on three key areas:
@@ -155,7 +159,7 @@ b. Execute the migration script, replacing repo_id with your project's repositor
 $ bash emr-migration.py --localPath <Local_path_To_EMR_workspace with e-BBBBBB> --repo <Sagemaker_studio_project_repoid> --emrStudioId es-AAAAAAA --emrWorkspaceId e-BBBBBB
 ```
 
-b. After running this script, go to the Sagemaker Unified Studio portal and perform a git pull from the UI to see the imported files from the EMR workspace:
+c. After running this script, go to the Sagemaker Unified Studio portal and perform a git pull from the UI to see the imported files from the EMR workspace:
 
 
 <table>
@@ -204,11 +208,12 @@ Ensure that your EMR compute has the necessary permissions and network access to
 
 If you plan to use existing EMR compute resource:
 
-2.1 For existing EMR Serverless applications:
+2.1 For existing EMR on EC2 Clusters:
 
-     Go to Portal, project → Compute → Data Analytics → Add Compute → EMR Serverless
-
-This step will create a connector in your project to establish a connection with an existing EMR Serverless application.
+     Go to Portal, project → Compute → Data processing → Add Compute → Connect to existing Compute resources
+     Choose EMR on EC2
+     
+This step will create a connector in your project to establish a connection with an existing EMR on EC2 Cluster.
 
 #### Important Considerations:
 
