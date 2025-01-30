@@ -142,45 +142,15 @@ aws s3 cp --recursive s3://aws-emr-studio-XXXXXXXXXX-us-west-2/YYYYYYYYYY/e-XXXX
     - Export notebooks from EMR Studio
     - Import notebooks into SageMaker Unified Studio
 
-a. Upload the entire folder to the Sagemaker Unified Studio project's CodeCommit repository:
+a.  Clone the GitHub repository:
 
-```
-import os
-import boto3
+$ git clone https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker.git
+$ cd Unified-Studio-for-Amazon-Sagemaker/migration/emr/
 
-code_commit = boto3.client('codecommit')
+    Execute the migration script. Replace repo_id, which can be found from your Sagemaker Unified Studio project's project overview page on the right side. Its in format datazone-yyyyyyyyyyy-dev
 
-repo = "src"
-branch = "main"
+$ bash emr-migration.py --localPath <Local_path_To_EMR_workspace with e-BBBBBB> --repo <Sagemaker_studio_project_repoid> --emrStudioId es-AAAAAAA --emrWorkspaceId e-BBBBBB
 
-local_folder = "/Users/<YOUR_USER_ID>/emr_workspace_files/e-XXXX"
-emr_studio_id = "es-XXXXX"
-emr_workspace_id = "e-XXXXX"
-
-putFilesList = []
-
-for (root, folders, files) in os.walk(local_folder):
-    for file in files:
-        file_path = os.path.join(root, file)
-        print("Local file: " + file_path)
-        print("Uploading to: " + str(file_path).replace(local_folder, f'emr_notebooks/{emr_studio_id}/{emr_workspace_id}'))
-
-        with open(file_path, mode='r+b') as file_obj:
-            file_content = file_obj.read()
-            putFileEntry = {
-                'filePath': str(file_path).replace(local_folder, f'emr_notebooks/{emr_studio_id}/{emr_workspace_id}'),
-                'fileContent': file_content
-            }
-            putFilesList.append(putFileEntry)
-
-parent_commit_id = code_commit.get_branch(repositoryName=repo, branchName=branch).get("branch").get("commitId")
-code_commit.create_commit(
-    repositoryName=repo,
-    branchName=branch,
-    parentCommitId=parent_commit_id,
-    putFiles=putFilesList
-)
-```
 
 b. After running this script, go to the Sagemaker Unified Studio portal and perform a git pull from the UI to see the imported files from the EMR workspace:
 
