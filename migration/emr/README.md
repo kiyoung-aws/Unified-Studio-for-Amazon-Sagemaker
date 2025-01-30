@@ -210,12 +210,231 @@ Ensure that your EMR compute has the necessary permissions and network access to
 
 If you plan to use existing EMR compute resource:
 
-2.1 For existing EMR on EC2 Clusters:
+2.1 For existing EMR on EC2 Clusters (Console):
 
      Go to Portal, project → Compute → Data processing → Add Compute → Connect to existing Compute resources
      Choose EMR on EC2
+
+
+![Compute](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/addcompute3.png)
      
+##### Step 2.1.1: Prepare Sagemaker Domain to accept existing EMR Clusters:
+
+1. Navigate to SageMaker Console → Domains → Select your domain. 
+2. Go to "Project profiles"
+3. Select "Data analytics and AI-ML model development" profile
+4. Click “Edit” on top and scroll down to Blueprint parameters 
+5. Set allowConnectionToUserGovernedEmrClusters to true. Save on tooling page, again, Save on profiles pages. 
+    1. If you miss second Save button, your change wont be saved.
+    2. Make sure to validate the change (Should reflect Override and true).
+  
+##### Step 2.1.2:  Grant Access to existing Data:
+
+1. In the SageMaker Unified Studio, click your current project dropdown “My_Project_XXXXX”
+2. Click Project Overview
+3. Under Project Details copy the Project role ARN
+4. In the AWS Management Console, navigate to Amazon S3
+5. Navigate to the bucket you want to provide your project access to
+6. Click Permissions
+7. Under Bucket Policy, click Edit
+8. Add the following policy
+
+```{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "Statement1",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::<s3 bucket with existing data>",
+            "Condition": {
+                "StringEquals": {
+                    "aws:PrincipalArn": "<project_role_arn from step 3>"
+                }
+            }
+        },
+        {
+            "Sid": "Statement1",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject"
+            ],
+            "Resource": "arn:aws:s3:::<s3 bucket with existing data>/*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:PrincipalArn": "<project_role_arn from step 3>"
+                }
+            }
+        }
+    ]
+}
+```
+
+1. For aws:PrincipalArn value,  copy the Project role ARN from Step 3.
+2. For Resource value, use your bucket that has existing resources 
+3. Click Save Changes
+
+#### Step 2.1.3: Create EMR Access Role/Modify Project Role/Bring your own Role
+
+In this step, you have option to create an access role (which will be used to assume role on your existing EMR Cluster). Optionally, you can use project role or bring your own role and adjust permissions.
+
+1. Create new IAM role for EMR access with following policy, update with your ClusterID:
+
+```{
+"Version": "2012-10-17",
+"Statement": [
+{
+"Sid": "EmrAccess",
+"Effect": "Allow",
+"Action": [
+"elasticmapreduce:ListInstances",
+"elasticmapreduce:DescribeCluster",
+"elasticmapreduce:DescribeSecurityConfiguration"
+],
+"Resource": "arn:aws:elasticmapreduce:<region>:<AccountID>:cluster/<ClusterID>"
+}
+]
+}
+```
+ Add your S3 bucket location and certificate path with GetObject Policy, append to #1:
+
+```
+{
+"Sid": "EMRSelfSignedCertAccess",
+"Effect": "Allow",
+"Action": ["s3:GetObject"],
+"Resource": ["arn:aws:s3:::<BucketLocation>/my-certs.zip"]
+}
+```
+
+1.11. Configure Trust Relationship Add trust policy to the EMR Access Role:
+    a. Replace ProjectId, ToolingBPenvironmentId and ExternalId (same as ProjectId)       
+    b. These values are available in Console (below) or via CLI/API.
+```
+{
+"Version": "2012-10-17",
+"Statement": [
+{
+"Effect": "Allow",
+"Principal": {
+"AWS": "arn:aws:iam::<AccountID>:role/datazone_usr_role_<ProjectId>_<ToolingBPenvironmentId>"
+},
+"Action": "sts:AssumeRole",
+"Condition": {
+"StringEquals": {
+"sts:ExternalId": "<ProjectId>"
+}
+}
+},
+{
+"Effect": "Allow",
+"Principal": {
+"AWS": "arn:aws:iam::<AccountID>:role/datazone_usr_role_<ProjectId>_<ToolingBPenvironmentId>"
+},
+"Action": "sts:SetSourceIdentity"
+}
+]
+}
+```
+
+ Here's how to create an IAM role with policy and trust relationship using AWS CLI commands (End to End Example):
+
+##### Create policy document for EMR access
+```
+cat > emr-access-policy.json << 'EOF'
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "EmrAccess",
+            "Effect": "Allow",
+            "Action": [
+                "elasticmapreduce:ListInstances",
+                "elasticmapreduce:DescribeCluster",
+                "elasticmapreduce:DescribeSecurityConfiguration"
+            ],
+            "Resource": "arn:aws:elasticmapreduce:REGION:ACCOUNT_ID:cluster/*"
+        },
+        {
+            "Sid": "EMRSelfSignedCertAccess",
+            "Effect": "Allow",
+            "Action": ["s3:GetObject"],
+            "Resource": ["arn:aws:s3:::YOUR-BUCKET/my-certs.zip"]
+        }
+    ]
+}
+EOF
+# Step 2: Create trust policy document
+cat > trust-policy.json << 'EOF'
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::ACCOUNT_ID:role/datazone_usr_role_PROJECT_ID_TOOLING_BP_ENV_ID"
+            },
+            "Action": "sts:AssumeRole",
+            "Condition": {
+                "StringEquals": {
+                    "sts:ExternalId": "PROJECT_ID"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::ACCOUNT_ID:role/datazone_usr_role_PROJECT_ID_TOOLING_BP_ENV_ID"
+            },
+            "Action": "sts:SetSourceIdentity"
+        }
+    ]
+}
+EOF
+# Step 3: Create the IAM role with trust policy
+aws iam create-role \
+    --role-name EMRAccessRole \
+    --assume-role-policy-document file://trust-policy.json
+# Step 4: Create the IAM policy
+aws iam create-policy \
+    --policy-name EMRAccessPolicy \
+    --policy-document file://emr-access-policy.json
+# Step 5: Attach the policy to the role
+aws iam attach-role-policy \
+    --role-name EMRAccessRole \
+    --policy-arn arn:aws:iam::ACCOUNT_ID:policy/EMRAccessPolicy
+# Step 6: Verify the role
+aws iam get-role --role-name EMRAccessRole
+# Step 7: Verify attached policies
+aws iam list-attached-role-policies --role-name EMRAccessRole
+```
+
+
+#### Step 2.1.4: Add (Existing) EMR on EC2 as Compute 
+
+1. Go to your SMUS Project and Compute section.
+2. Now, traverse to Data Analytics tab.
+3. Click Add Compute
+4. Choose “Connect to Existing Compute Resources”
+5. Select “EMR on EC2 Cluster”
+6. Fill EMR Access Role ARN, EMR on EC2 Cluster ARN, EMR Instance Profile ARN, Compute Name and Description.
+    1. Access Role ARN = IAM Role ARN from Step3.
+    2. EMR on EC2 Cluster ARN = Go to your Cluster and Copy ARN (Example: arn:aws:elasticmapreduce:us-east-1:121212121212121211:cluster/j-XXXXXXXX) 
+    3. EMR Instance Profile ARN = Instance Profile Role ARN attached to your cluster.
+7. Once your “Add Compute”, validate your cluster details from your SMUS Console
+
 This step will create a connector in your project to establish a connection with an existing EMR on EC2 Cluster.
+
+
+
+2.2 For existing EMR Serverless Applications via custom script:
 
 #### Important Considerations:
 
@@ -290,12 +509,6 @@ restart-sagemaker-ui-jupyter-server
 After completing these steps, open a notebook in Unified Studio. You should now see the new EMR Serverless connector available for selection in the notebook interface. You can now send Python scripts to the EMR Serverless application for execution.
 
 
-For existing EMR on EC2 clusters:
-
-    - [Checklist for ensuring your cluster meets Sagemaker Unified Studio requirements]
-    - [Guidelines for modifying existing clusters if needed]
-
-![Compute](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/addcompute3.png)
 
 Regardless of which option you choose, ensure that your EMR compute environment is properly configured to work seamlessly with Unified Studio's interface and notebooks. This includes setting up appropriate IAM roles, security groups, and network configurations.
 
