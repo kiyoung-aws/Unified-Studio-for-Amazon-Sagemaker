@@ -10,6 +10,7 @@ This guide provides step-by-step instructions and example script samples to help
 - Sagemaker Unified Studio does not support EMR Studio Notebooks with multiple runtime roles, yet (But can be worked around with connections)
 - Migration of existing IAM Runtime roles into Project User role is not supported (yet)
 - You can configure one IAM (user) role per project following below instructions
+- [AWS CloudShell](https://aws.amazon.com/cloudshell/) is the preferred Unix shell environment for running these commands.
 
 
 ## The migration process focuses on three key areas:
