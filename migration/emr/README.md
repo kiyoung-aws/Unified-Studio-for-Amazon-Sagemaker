@@ -11,10 +11,11 @@ This guide provides step-by-step instructions and example script samples to help
 - Migration of existing IAM Runtime roles into Project User role is not supported (yet)
 - You can configure one IAM (user) role per project following below instructions
 - [AWS CloudShell](https://aws.amazon.com/cloudshell/) is the preferred Unix shell environment for running these commands.
-- IMPORTANT: EMR Security Requirements
+- **IMPORTANT**: EMR Security Requirements
   EMR on EC2 clusters must have a security configuration with in-transit encryption enabled before they can be onboarded to SageMaker Studio. This is a mandatory prerequisite.
-- Adding Existing EMR Serverless Applications as Compute will be available later Sagemaker Unified Studio release.
-
+**NOTE**: EMR Serverless Integration
+- Console integration: Adding existing EMR Serverless Applications via the SageMaker Studio UI will be available in future releases
+- Current workaround: You can attach existing EMR Serverless Applications using the custom connector script provided in this git page.
 
 
 ## The migration process focuses on three key areas:
