@@ -13,6 +13,7 @@ This guide provides step-by-step instructions and example script samples to help
 - [AWS CloudShell](https://aws.amazon.com/cloudshell/) is the preferred Unix shell environment for running these commands.
 - **IMPORTANT**: EMR Security Requirements
   EMR on EC2 clusters must have a security configuration with in-transit encryption enabled before they can be onboarded to SageMaker Studio. This is a mandatory prerequisite.
+
 **NOTE**: EMR Serverless Integration
 - Console integration: Adding existing EMR Serverless Applications via the SageMaker Studio UI will be available in future releases
 - Current workaround: You can attach existing EMR Serverless Applications using the custom connector script provided in this git page.
