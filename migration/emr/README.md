@@ -158,7 +158,7 @@ $ cd Unified-Studio-for-Amazon-Sagemaker/migration/emr/
 b. Execute the migration script, replacing repo_id with your project's repository ID. You can find the repo_id in your SageMaker Studio project's overview page (right panel). Example format: datazone-yyyyyyyyyyy-dev
 
 ```
-$ bash emr-migration.py --localPath <Local_path_To_EMR_workspace with e-BBBBBB> --repo <Sagemaker_studio_project_repoid> --emrStudioId es-AAAAAAA --emrWorkspaceId e-BBBBBB
+$ python3 emr-migration.py --localPath <Local_path_To_EMR_workspace with e-BBBBBB> --repo <Sagemaker_studio_project_repoid> --emrStudioId es-AAAAAAA --emrWorkspaceId e-BBBBBB
 ```
 
 c. After running this script, go to the Sagemaker Unified Studio portal and perform a git pull from the UI to see the imported files from the EMR workspace:
