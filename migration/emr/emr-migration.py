@@ -1,4 +1,4 @@
-##Usage: ./emr-migration.py --localPath <Local_path_To_EMR_workspace with e-BBBBBB> --repo <Sagemaker_studio_project_repoid> --emrStudioId es-AAAAAAA --emrWorkspaceId e-BBBBBB
+##Usage: python3 emr-migration.py --localPath <Local_path_To_EMR_workspace with e-BBBBBB> --repo <Sagemaker_studio_project_repoid> --emrStudioId es-AAAAAAA --emrWorkspaceId e-BBBBBB
 ## repo id can be found from your Sagemaker Unified Studio project's project overview page on the right side. Its in format datazone-yyyyyyyyyyy-dev
 
 import os
