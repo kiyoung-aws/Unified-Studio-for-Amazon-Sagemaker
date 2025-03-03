@@ -62,7 +62,7 @@ def _update_trust_policy(role_name, new_trust_policy, iam_client, execute_flag):
         pprint(new_trust_policy)
         print(f"Trust policy update skipped for role: `{role_name}`, set --execute flag to True to do the actual update.\n")
 
-# Custom managed Policy may contain project user role's Arn, we need to update policy content with BYOR role when necessary
+# Customer managed Policy may contain project user role's Arn, we need to update policy content with BYOR role when necessary
 # We will only do the change for both
 #   case 1: Role Replacement
 #   case 2: Role Enhancement
@@ -247,13 +247,13 @@ def _copy_datazone_subscriptions(domain_id, environment_id, datazone, byor_role,
                         domainIdentifier=domain_id,
                         identifier=sub_grant['id']
                     )
-                    print(f'Called delete subscription grant {sub_grant['id']} API successfully \n')
+                    print(f"Called delete subscription grant {sub_grant['id']} API successfully \n")
                     wait_for_subscription_grant_deletion(
                         datazone=datazone,
                         domain_id=domain_id,
                         grant_id=sub_grant['id']
                     )
-                    print(f'Deleted subscription grant {sub_grant['id']} successfully \n')
+                    print(f"Deleted subscription grant {sub_grant['id']} successfully \n")
 
             # Update subscription target with the BYOR Role
             if execute_flag:
@@ -280,7 +280,7 @@ def _copy_datazone_subscriptions(domain_id, environment_id, datazone, byor_role,
                             }
                         }
                     )
-                    print(f'Created new subscription grants successfully: {create_response} \n')
+                    print(f"Created new subscription grants successfully: {create_response} \n")
 
 # LakeFormation Resource list got from list_permissions and list_lake_formation_opt_ins APIs may not be usable for create/grant API directly,
 # this method does some filter/refactor work to make it work properly.

@@ -107,7 +107,8 @@ Before using this script, ensure you have appropriate permissions configured thr
                 "lakeformation:ListPermissions",
                 "lakeformation:CreateLakeFormationOptIn",
                 "lakeformation:ListResources",
-                "lakeformation:UpdateResource"
+                "lakeformation:UpdateResource",
+                "lakeformation:GetDataAccess"
             ],
             "Resource": "*"
         },
