@@ -243,11 +243,11 @@ def _copy_datazone_subscriptions(domain_id, environment_id, datazone, byor_role,
             # Delete all subscription grants
             for sub_grant in sub_grants_list:
                 if execute_flag:
+                    print(f"Calling delete subscription grant {sub_grant['id']} API... \n")
                     datazone.delete_subscription_grant(
                         domainIdentifier=domain_id,
                         identifier=sub_grant['id']
                     )
-                    print(f"Called delete subscription grant {sub_grant['id']} API successfully \n")
                     wait_for_subscription_grant_deletion(
                         datazone=datazone,
                         domain_id=domain_id,
