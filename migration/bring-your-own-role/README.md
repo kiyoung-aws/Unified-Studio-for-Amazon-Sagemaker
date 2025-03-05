@@ -154,7 +154,7 @@ python3 bring_your_own_role.py use-your-own-role \
     --bring-in-role-arn <Custom-IAM-Role-Arn> \
     --region <region-code> \
 ```
-#### Use Case 2: Replace SageMaker Unified Studio Project Role with your own Role
+#### Use Case 2: Enhance SageMaker Unified Studio Project Role using your own Role
 ```
 python3 bring_your_own_role.py enhance-project-role \
     --domain-id <SageMaker-Unified-Studio-Domain-Id> \
@@ -166,3 +166,4 @@ python3 bring_your_own_role.py enhance-project-role \
 - Both commands will display a preview of proposed changes by default
 - Add the `--execute` flag to apply the changes
 - The `--region` parameter is optional and only required when necessary
+- In `use-your-own-role` case, the role you bring in must not be used in another Project as User Role
