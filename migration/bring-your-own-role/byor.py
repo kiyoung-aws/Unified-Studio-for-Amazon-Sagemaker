@@ -553,16 +553,11 @@ def _parse_args():
 
 def byor_main():
     args = _parse_args()
-    session = boto3.Session()
+    session = boto3.Session(region_name=args.region)
     iam_client = session.client('iam')
     datazone = session.client('datazone')
     lakeformation = session.client('lakeformation')
     sagemaker = session.client('sagemaker')
-    if args.region:
-        datazone = session.client('datazone',
-                                    region_name=args.region)
-        lakeformation = session.client('lakeformation',
-                                    region_name=args.region)
         
     if args.command == ROLE_REPLACEMENT:
         print(f"Use bring in Role: {args.bring_in_role_arn} as Project Role...")
