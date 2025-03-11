@@ -151,4 +151,4 @@ python3 bring_your_own_role.py enhance-project-role \
 ### Important Notes
 - Both commands will display a preview of proposed changes by default. To apply the changes for `use-your-own-role`, add the `--execute` `--force-update` flag. To apply the changes for `enhance-project-role`, add the `--execute` flag
 - The `--region` parameter is optional and only required when necessary. If not specified, it defaults to AWS region specified in the CLI credentials config
-- In `use-your-own-role` case, the role you bring in must not be used as the project IAM role in another SageMaker Unified Studio Project
+- In `use-your-own-role` case, the role you bring in must not be used as the project User Role in another SageMaker Unified Studio Project
