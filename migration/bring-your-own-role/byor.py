@@ -553,7 +553,9 @@ def _parse_args():
 
 def byor_main():
     args = _parse_args()
-    session = boto3.Session(region_name=args.region)
+    session = boto3.Session()
+    if (args.region):
+        session = boto3.Session(region_name=args.region)
     iam_client = session.client('iam')
     datazone = session.client('datazone')
     lakeformation = session.client('lakeformation')

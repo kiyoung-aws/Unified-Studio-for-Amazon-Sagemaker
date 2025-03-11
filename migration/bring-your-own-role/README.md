@@ -1,33 +1,19 @@
 # BringYourOwnRoleScript for SageMaker Unified Studio
 
-A utility script for Bring Your Own IAM Role in SageMaker Unified Studio projects. This tool helps configure permissions and customize role assignments for SageMaker Unified Studio environments.
+This utility script helps you configure permissions and customize role assignments for SageMaker Unified Studio environments.
 
-# Important Prerequisites and Considerations
-## Resource Creation
-After Project creation, the BYOR (Bring Your Own Role) role replacement functionality will prevent successful creation of new resources within the Project, including:
-- Amazon EMR Cluster on EC2
-- Amazon EMR Serverless
-- Amazon Redshift Serverless
-- Workflow environments
-## Job Management
-Before proceeding with the script execution:
-1. Ensure all running jobs in your Project have been properly saved and completed
-2. Verify that no jobs are currently in a mutating state
-3. Any unsaved work may be lost during this process
-## Resource Creation Status
-To ensure successful script execution:
-- Verify that no resource creation operations are currently in progress within your Unified Studio Project
-- Any ongoing resource creation processes may interfere with and cause the script execution to fail
+## Considerations and Limitations
 
-**Note:** Please review above requirements carefully before proceeding with the script execution.
+Please review this section carefully before proceeding to execute the script.
+1. Ensure that you save your work and that you do not have any running tasks or processes (for e.g., starting or reconfiguring a JupyterLab space, creating a new compute resource) because these can get interrupted or may cause the script to fail.
 
 ## Prerequisites
 
-Before using this script, ensure you have appropriate permissions configured through either an IAM role or IAM user.
+Before using this script, ensure you have appropriate permissions configured through either an IAM role or IAM user. This IAM role or IAM user will be the executor for this script.
 
 ### Required Permissions
 
-1. Create a new IAM policy with the following permissions. Note: While this example uses "*" for `Resource`, consider restricting it according to your security requirements.
+1. Create a new IAM policy with the following permissions and attach it to an IAM user or an IAM role. While this example uses `*` for `Resource`, consider restricting it according to your security requirements.
 ```
 {
     "Version": "2012-10-17",
@@ -127,13 +113,11 @@ Before using this script, ensure you have appropriate permissions configured thr
     ]
 }
 ```
+
 ### Configuration Steps
 
-1. Have the IAM policy as shown above ready
-2. Attach the policy to your executor resource (IAM user or role)
-3. Add the executor(IAM user or role) as the Domain's owner
-4. Add the executor(IAM user or role) as the Project's owner, which you want to execute BYOR script on
-5. Add the executor(IAM user or role) as LakeFormation Data lake administrators
+1. Go to the Amazon SageMaker console and add the executor (IAM user or IAM role) as a user in your SageMaker Unified Studio Domain. See [user management](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/adminguide/user-management.html) for more details. Then, add the executor (IAM user or IAM role) as a owner for the SageMaker Unified Studio project in which you want to execute this script.
+2. In the AWS Lake Formation console, add the executor (IAM user or role) as a Data Lake Administrator.
 
 ### Authentication Setup
 
@@ -141,10 +125,12 @@ For information on configuring credentials to use the executor permissions, refe
 
 ## Usage
 
-### Location
-In terminal, navigate to the directory containing `bring_your_own_role.py` before executing commands.
+Clone the [Unified-Studio-for-Amazon-Sagemaker](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker) repo using:
+```
+git clone https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker.git
+```
+In your CLI, navigate to the directory containing `bring_your_own_role.py`
 
-### Available Commands
 #### Use Case 1: Replace SageMaker Unified Studio Project Role with your own Role
 Replace the default project role with your custom role:
 ```
@@ -152,7 +138,7 @@ python3 bring_your_own_role.py use-your-own-role \
     --domain-id <SageMaker-Unified-Studio-Domain-Id> \
     --project-id <SageMaker-Unified-Studio-Project-Id> \
     --bring-in-role-arn <Custom-IAM-Role-Arn> \
-    --region <region-code> \
+    --region <region-code>
 ```
 #### Use Case 2: Enhance SageMaker Unified Studio Project Role using your own Role
 ```
@@ -160,10 +146,9 @@ python3 bring_your_own_role.py enhance-project-role \
     --domain-id <SageMaker-Unified-Studio-Domain-Id> \
     --project-id <SageMaker-Unified-Studio-Project-Id> \
     --bring-in-role-arn <Custom-IAM-Role-Arn> \
-    --region <region-code> \
+    --region <region-code>
 ```
 ### Important Notes
-- Both commands will display a preview of proposed changes by default
-- Add the `--execute` flag to apply the changes
-- The `--region` parameter is optional and only required when necessary
-- In `use-your-own-role` case, the role you bring in must not be used in another Project as User Role
+- Both commands will display a preview of proposed changes by default. To apply the changes for `use-your-own-role`, add the `--execute` `--force-update` flag. To apply the changes for `enhance-project-role`, add the `--execute` flag
+- The `--region` parameter is optional and only required when necessary. If not specified, it defaults to AWS region specified in the CLI credentials config
+- In `use-your-own-role` case, the role you bring in must not be used as the project IAM role in another SageMaker Unified Studio Project
