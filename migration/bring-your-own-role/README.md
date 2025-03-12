@@ -9,11 +9,8 @@ Please review this section carefully before proceeding to execute the script.
 
 ## Prerequisites
 
-Before using this script, ensure you have appropriate permissions configured through either an IAM role or IAM user. This IAM role or IAM user will be the executor for this script.
+1. You need the following IAM permissions to execute the script for configuring permissions and customizing role assignments. If you have an existing IAM user with these permissions, use it for running the script. If not, then create a new IAM policy with the following permissions. The example below uses `*` for `Resource`, but you can restrict it according to your security requirements. These permissions are not needed once you complete executing the script.
 
-### Required Permissions
-
-1. Create a new IAM policy with the following permissions and attach it to an IAM user or an IAM role. While this example uses `*` for `Resource`, consider restricting it according to your security requirements.
 ```
 {
     "Version": "2012-10-17",
@@ -114,10 +111,9 @@ Before using this script, ensure you have appropriate permissions configured thr
 }
 ```
 
-### Configuration Steps
+2. Go to the Amazon SageMaker console and add the executor IAM user as a user in your SageMaker Unified Studio Domain. See [user management](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/adminguide/user-management.html) for more details. Then, add the executor IAM user as an owner for the SageMaker Unified Studio project in which you want to execute this script.
 
-1. Go to the Amazon SageMaker console and add the executor (IAM user or IAM role) as a user in your SageMaker Unified Studio Domain. See [user management](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/adminguide/user-management.html) for more details. Then, add the executor (IAM user or IAM role) as a owner for the SageMaker Unified Studio project in which you want to execute this script.
-2. In the AWS Lake Formation console, add the executor (IAM user or role) as a Data Lake Administrator.
+3. In the AWS Lake Formation console, add the executor IAM user as a Data Lake Administrator.
 
 ### Authentication Setup
 
