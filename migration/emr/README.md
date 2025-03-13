@@ -221,7 +221,7 @@ For now, use the custom script method described below to create connections.
 
 **IMPORTANT NOTE**
 
-These configuration steps are only necessary if you haven't already added your existing EMR Compute through the console. If you have used the console to configure your EMR Compute, you can skip these steps.
+These configuration steps are only necessary if you haven't already added your existing EMR Compute through the console or want to bring existing EMR Serverless application. If you have used the console to configure your EMR Compute, you can skip these steps.
 
 #### Configuration Steps
 1. EMR Serverless Configuration
@@ -266,7 +266,6 @@ datazone.get_connection(
     withSecret=True
 )
 ```
-In the next cell choose PySpark and the connection name :
 
 2. EMR on EC2 Configuration:
 
@@ -346,8 +345,6 @@ When connecting to an Amazon EMR Serverless application, Unified Studio can only
 }
 }
 ```
-
-
 
 #### Differences in EMR Magics
 
