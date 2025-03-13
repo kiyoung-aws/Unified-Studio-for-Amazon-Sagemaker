@@ -239,7 +239,11 @@ When connecting to an Amazon EMR Serverless application, Unified Studio can only
 }
 ```
 
-#### Steps to Create the Sagemaker Unified Studio Connector (For your Existing EMR Compute):
+#### Setting up Sagemaker Unified Studio Connector for EMR Compute
+ IMPORTANT NOTE
+
+    These configuration steps are only necessary if you haven't already added your existing EMR Compute through the console. If you have used the console to configure your EMR Compute, you can skip these steps.
+
 
 1. Open JupyterHub from Studio Console and Execute Commands below in your Local Python kernel:
 2. Make sure boto3 version is up to date
