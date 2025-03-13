@@ -212,37 +212,16 @@ If you plan to use existing EMR compute resource:
 
 2.1 For existing EMR on EC2 Clusters (Console): Review [AWS docs](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/userguide/adding-existing-emr-on-ec2-clusters.html).
 
-2.2 For existing EMR Serverless Applications (Console): Will be added in the future. Meanwhile, you can use custom script to create connections, refer below.
+2.2 Adding Existing EMR Serverless Applications (Console)
+Console support for adding existing EMR Serverless applications is planned for future release. 
+For now, use the custom script method described below to create connections.
 
-#### Important Considerations:
-
-When connecting to an Amazon EMR Serverless application, Unified Studio can only use the project role (also known as the user role) as the runtime role. This differs from EMR Studio, where users can choose from multiple runtime roles. To ensure that migrated EMR Studio notebooks continue to function properly, the project/user role must have the same permissions as the runtime role previously used in EMR Studio.
-
-1. Ensure your EMR Serverless application is using EMR version 7 or later.
-2. Verify that the Livy endpoint is enabled in your EMR Serverless application configuration.
-3. Add the following trust relationship to your Sagemaker Unified Studio project/user role:
-
-```
-{
-"Sid": "ServerlessTrustPolicy",
-"Effect": "Allow",
-"Principal": {
-"Service": "emr-serverless.amazonaws.com"
-},
-"Action": "sts:AssumeRole",
-"Condition": {
-"StringLike": {
-"aws:SourceAccount": "121223232323232",
-"aws:SourceArn": "arn:aws:emr-serverless:us-west-2:121223232323232:/applications/00fsdsdssdsldkfd"
-}
-}
-}
-```
 
 #### [Optional] Setting up Sagemaker Unified Studio Connector for EMR Compute
- IMPORTANT NOTE
 
-    These configuration steps are only necessary if you haven't already added your existing EMR Compute through the console. If you have used the console to configure your EMR Compute, you can skip these steps.
+**IMPORTANT NOTE**
+
+These configuration steps are only necessary if you haven't already added your existing EMR Compute through the console. If you have used the console to configure your EMR Compute, you can skip these steps.
 
 Configuration Steps
 1. EMR Serverless Configuration
@@ -343,6 +322,31 @@ datazone.get_connection(
 ![EMR Serverless Connector](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/emr-s-connect.png)
 
 ![EMR on EC2 Connector](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/emr-ec2.png)
+#### Important Considerations:
+
+When connecting to an Amazon EMR Serverless application, Unified Studio can only use the project role (also known as the user role) as the runtime role. This differs from EMR Studio, where users can choose from multiple runtime roles. To ensure that migrated EMR Studio notebooks continue to function properly, the project/user role must have the same permissions as the runtime role previously used in EMR Studio.
+
+1. Ensure your EMR Serverless application is using EMR version 7 or later.
+2. Verify that the Livy endpoint is enabled in your EMR Serverless application configuration.
+3. Add the following trust relationship to your Sagemaker Unified Studio project/user role:
+
+```
+{
+"Sid": "ServerlessTrustPolicy",
+"Effect": "Allow",
+"Principal": {
+"Service": "emr-serverless.amazonaws.com"
+},
+"Action": "sts:AssumeRole",
+"Condition": {
+"StringLike": {
+"aws:SourceAccount": "121223232323232",
+"aws:SourceArn": "arn:aws:emr-serverless:us-west-2:121223232323232:/applications/00fsdsdssdsldkfd"
+}
+}
+}
+```
+
 
 
 #### Differences in EMR Magics
