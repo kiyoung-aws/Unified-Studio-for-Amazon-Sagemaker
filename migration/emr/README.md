@@ -267,6 +267,15 @@ datazone.get_connection(
 )
 ```
 
+After executing the appropriate configuration code:
+        a. Click the refresh button next to the connector dropdown in the notebook cell
+        b. Select PySpark and your newly created connection name
+
+Open a new notebook in Unified Studio to verify the connector appears in the available options
+
+![EMR Serverless Connector](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/emr-s-connect.png)
+
+
 2. EMR on EC2 Configuration:
 
 Open JupyterHub from Studio Console and execute the following in your notebook:
@@ -310,17 +319,15 @@ datazone.get_connection(
     withSecret=True
 )
 ```
-### Post-Configuration Steps
 
-  1. After executing the appropriate configuration code:
+After executing the appropriate configuration code:
         a. Click the refresh button next to the connector dropdown in the notebook cell
         b. Select PySpark and your newly created connection name
 
-  2. Open a new notebook in Unified Studio to verify the connector appears in the available options
-
-![EMR Serverless Connector](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/emr-s-connect.png)
+Open a new notebook in Unified Studio to verify the connector appears in the available options
 
 ![EMR on EC2 Connector](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/emr-ec2.png)
+
 #### Important Considerations:
 
 When connecting to an Amazon EMR Serverless application, Unified Studio can only use the project role (also known as the user role) as the runtime role. This differs from EMR Studio, where users can choose from multiple runtime roles. To ensure that migrated EMR Studio notebooks continue to function properly, the project/user role must have the same permissions as the runtime role previously used in EMR Studio.
