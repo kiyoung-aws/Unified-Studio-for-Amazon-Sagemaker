@@ -239,35 +239,37 @@ When connecting to an Amazon EMR Serverless application, Unified Studio can only
 }
 ```
 
-#### Setting up Sagemaker Unified Studio Connector for EMR Compute
+#### [Optional] Setting up Sagemaker Unified Studio Connector for EMR Compute
  IMPORTANT NOTE
 
     These configuration steps are only necessary if you haven't already added your existing EMR Compute through the console. If you have used the console to configure your EMR Compute, you can skip these steps.
 
+Configuration Steps
+1. EMR Serverless Configuration
 
-1. Open JupyterHub from Studio Console and Execute Commands below in your Local Python kernel:
-2. Make sure boto3 version is up to date
-3. Modify region and variables per your Project Configuration
+Open JupyterHub from Studio Console and execute the following in your notebook:
 
-
-For EMR Serverless:
 ```
+# Install required boto3 version
 %%bash
 micromamba install -y -c conda-forge boto3="1.36.10"
 
-domain_id = "dzd_xxxxxxxxx"
-project_id = "c4bxxxxxxx"
-env_id = "4c4bxxxxxxx"
-region = "us-east-1"
+# Configure variables
+domain_id = "dzd_xxxxxxxxx"    # Your DataZone domain ID
+project_id = "c4bxxxxxxx"      # Your project ID
+env_id = "4c4bxxxxxxx"         # Your environment ID
+region = "us-east-1"          # Your AWS region
 
+# Initialize boto3 client
 import boto3
 print(boto3.__version__)
 datazone = boto3.client('datazone', region_name=region)
 
-datazone.create_connection(
+# Create EMR Serverless connection
+response = datazone.create_connection(
     domainIdentifier=domain_id,
     environmentIdentifier=env_id,
-    name='emr-serverless', # <- This is the connection name (where you can be creative :) )
+    name='emr-serverless',    # Customizable connection name
     props={
         'sparkEmrProperties': {
             'computeArn': 'arn:aws:emr-serverless:us-east-1:0123456789:/applications/00f000000000'
@@ -275,63 +277,72 @@ datazone.create_connection(
     }
 )
 
-# connection_id is stored in response.connectionId
+# Store connection_id from response for future reference
+connection_id = response['connectionId']
 
-# Verify the connection works
+# Verify connection
 datazone.get_connection(
     domainIdentifier=domain_id,
-    identifier="xxxxxxxxxx", # <- This is the connection id
+    identifier=connection_id,
     withSecret=True
 )
-
-# Click on the refresh button on the notebook cell, right to the connector dropdown.
 ```
 In the next cell choose PySpark and the connection name :
 
+2. EMR on EC2 Configuration:
+
+Open JupyterHub from Studio Console and execute the following in your notebook:
+
 ```
+# Install required boto3 version
 %%bash
 micromamba install -y -c conda-forge boto3="1.36.10"
 
+# Configure variables
 domain_id = "dzd_b4ddddddddd"
 project_id = "dzd_b4ddddddddd"
 env_id = "40ddddddddd"
 region = "us-east-1"
 
+# Initialize boto3 client
 import boto3
 print(boto3.__version__)
 datazone = boto3.client('datazone', region_name=region)
 
-datazone.create_connection(
+# Create EMR on EC2 connection
+response = datazone.create_connection(
     domainIdentifier=domain_id,
     environmentIdentifier=env_id,
-    name='emr-on-ec2', # <- This is the connection name (where you can be creative :) )
+    name='emr-on-ec2',    # Customizable connection name
     props={
         'sparkEmrProperties': {
             'computeArn': 'arn:aws:elasticmapreduce:us-west-2:0123456789:cluster/j-ERRFTGTTF',
-            # Below is a file for my self-signed cert. I followed this doc:
-            # https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-encryption-enable.html#emr-encryption-certificates
             'trustedCertificatesS3Uri': 's3://amazon-maxdome-0123456789-us-east-1-196990529/dzd_b4ddddddddd/xxxxxxxx/emr-cert/trustedCertificates.pem'
         }
     }
 )
 
-# connection_id is stored in response.connectionId
+# Store connection_id from response for future reference
+connection_id = response['connectionId']
 
-# Verify the connection works
+# Verify connection
 datazone.get_connection(
     domainIdentifier=domain_id,
-    identifier="xxxxxxxxxx", # <- This is the connection id
+    identifier=connection_id,
     withSecret=True
 )
-
-# Click on the refresh button on the notebook cell, right to the connector dropdown
 ```
-In the next cell choose PySpark and the connection name :
+### Post-Configuration Steps
 
+  1. After executing the appropriate configuration code:
+        a. Click the refresh button next to the connector dropdown in the notebook cell
+        b. Select PySpark and your newly created connection name
 
-After completing these steps, open a notebook in Unified Studio. You should now see the new EMR Serverless connector available for selection in the notebook interface. You can now send Python scripts to the EMR Compute for execution.
+  2. Open a new notebook in Unified Studio to verify the connector appears in the available options
 
-Regardless of which option you choose, ensure that your EMR compute environment is properly configured to work seamlessly with Unified Studio's interface and notebooks. This includes setting up appropriate IAM roles, security groups, and network configurations.
+![EMR Serverless Connector](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/emr-s-connect.png)
+
+![EMR on EC2 Connector](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/img/emr-ec2.png)
 
 
 #### Differences in EMR Magics
