@@ -212,11 +212,11 @@ If you plan to use existing EMR compute resource:
 
 2.1 For existing EMR on EC2 Clusters (Console): Review [AWS docs](https://docs.aws.amazon.com/sagemaker-unified-studio/latest/userguide/adding-existing-emr-on-ec2-clusters.html).
 
-2.2 For existing EMR Serverless Applications via custom script:
+2.2 For existing EMR Serverless Applications (Console): Will be added in the future. Meanwhile, you can use custom script to create connections, refer below.
 
 #### Important Considerations:
 
-[NOTE] When connecting to an Amazon EMR Serverless application, Unified Studio can only use the project role (also known as the user role) as the runtime role. This differs from EMR Studio, where users can choose from multiple runtime roles. To ensure that migrated EMR Studio notebooks continue to function properly, the project/user role must have the same permissions as the runtime role previously used in EMR Studio.
+When connecting to an Amazon EMR Serverless application, Unified Studio can only use the project role (also known as the user role) as the runtime role. This differs from EMR Studio, where users can choose from multiple runtime roles. To ensure that migrated EMR Studio notebooks continue to function properly, the project/user role must have the same permissions as the runtime role previously used in EMR Studio.
 
 1. Ensure your EMR Serverless application is using EMR version 7 or later.
 2. Verify that the Livy endpoint is enabled in your EMR Serverless application configuration.
@@ -239,54 +239,93 @@ If you plan to use existing EMR compute resource:
 }
 ```
 
-#### Steps to Create the Sagemaker Unified Studio Connector:
+#### Steps to Create the Sagemaker Unified Studio Connector (For your Existing EMR Compute):
 
-1. In your project directory, create a new connection file:
+1. Open JupyterHub from Studio Console and Execute Commands below in your Local Python kernel:
+2. Make sure boto3 version is up to date
+3. Modify region and variables per your Project Configuration
+
+
+For EMR Serverless:
+```
+%%bash
+micromamba install -y -c conda-forge boto3="1.36.10"
+
+domain_id = "dzd_xxxxxxxxx"
+project_id = "c4bxxxxxxx"
+env_id = "4c4bxxxxxxx"
+region = "us-east-1"
+
+import boto3
+print(boto3.__version__)
+datazone = boto3.client('datazone', region_name=region)
+
+datazone.create_connection(
+    domainIdentifier=domain_id,
+    environmentIdentifier=env_id,
+    name='emr-serverless', # <- This is the connection name (where you can be creative :) )
+    props={
+        'sparkEmrProperties': {
+            'computeArn': 'arn:aws:emr-serverless:us-east-1:0123456789:/applications/00f000000000'
+        }
+    }
+)
+
+# connection_id is stored in response.connectionId
+
+# Verify the connection works
+datazone.get_connection(
+    domainIdentifier=domain_id,
+    identifier="xxxxxxxxxx", # <- This is the connection id
+    withSecret=True
+)
+
+# Click on the refresh button on the notebook cell, right to the connector dropdown.
+```
+In the next cell choose PySpark and the connection name :
 
 ```
-cat<<EOF >/home/**************/<your-project>/<your-domain>/.connections/shared/studio2.spark_emr_serverless.connection
-{
-  "name": "studio2.spark_emr_serverless",
-  "authorizationMode": "PROJECT",
-  "provisioningType": "MANAGED",
-  "domainIdentifier": "dzd_<yourid>",
-  "projectIdentifier": "<your_project_id>",
-  "environmentIdentifier": "your_env_id",
-  "type": "SPARK_EMR_SERVERLESS",
-  "sparkEmrProperties": {
-    "emrComputeArn": "arn:aws:emr-serverless:<region>2:XXXXXXXXXXX:/applications/yyyyyyyyyy"
-  },
-  "location": {
-    "awsRegion": "<region>",
-    "awsAccountId": "XXXXXXXXXXX"
-  }
-}
-EOF
+%%bash
+micromamba install -y -c conda-forge boto3="1.36.10"
+
+domain_id = "dzd_b4ddddddddd"
+project_id = "dzd_b4ddddddddd"
+env_id = "40ddddddddd"
+region = "us-east-1"
+
+import boto3
+print(boto3.__version__)
+datazone = boto3.client('datazone', region_name=region)
+
+datazone.create_connection(
+    domainIdentifier=domain_id,
+    environmentIdentifier=env_id,
+    name='emr-on-ec2', # <- This is the connection name (where you can be creative :) )
+    props={
+        'sparkEmrProperties': {
+            'computeArn': 'arn:aws:elasticmapreduce:us-west-2:0123456789:cluster/j-ERRFTGTTF',
+            # Below is a file for my self-signed cert. I followed this doc:
+            # https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-encryption-enable.html#emr-encryption-certificates
+            'trustedCertificatesS3Uri': 's3://amazon-maxdome-0123456789-us-east-1-196990529/dzd_b4ddddddddd/xxxxxxxx/emr-cert/trustedCertificates.pem'
+        }
+    }
+)
+
+# connection_id is stored in response.connectionId
+
+# Verify the connection works
+datazone.get_connection(
+    domainIdentifier=domain_id,
+    identifier="xxxxxxxxxx", # <- This is the connection id
+    withSecret=True
+)
+
+# Click on the refresh button on the notebook cell, right to the connector dropdown
 ```
-
-* Verify the connection is working:
-
-```
-aws datazone get-connection --name studio2.spark_emr_serverless --with-secret
-```
-
-* Push the new connection file to the git repository:
-
-```
-git add --force /home/**************/<your-project>/.connections/shared/studio2.spark_emr_serverless.connection
-git commit -m "Adding a new EMR serverless connection file"
-git push
-```
-
-* Restart the Jupyter server to recognize the new Sagemaker Unified Studio connector:
-
-```
-restart-sagemaker-ui-jupyter-server
-```
-
-After completing these steps, open a notebook in Unified Studio. You should now see the new EMR Serverless connector available for selection in the notebook interface. You can now send Python scripts to the EMR Serverless application for execution.
+In the next cell choose PySpark and the connection name :
 
 
+After completing these steps, open a notebook in Unified Studio. You should now see the new EMR Serverless connector available for selection in the notebook interface. You can now send Python scripts to the EMR Compute for execution.
 
 Regardless of which option you choose, ensure that your EMR compute environment is properly configured to work seamlessly with Unified Studio's interface and notebooks. This includes setting up appropriate IAM roles, security groups, and network configurations.
 
