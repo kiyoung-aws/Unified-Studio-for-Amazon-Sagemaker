@@ -217,13 +217,13 @@ Console support for adding existing EMR Serverless applications is planned for f
 For now, use the custom script method described below to create connections.
 
 
-#### [Optional] Setting up Sagemaker Unified Studio Connector for EMR Compute
+### [Optional] Setting up Sagemaker Unified Studio Connector for EMR Compute
 
 **IMPORTANT NOTE**
 
 These configuration steps are only necessary if you haven't already added your existing EMR Compute through the console. If you have used the console to configure your EMR Compute, you can skip these steps.
 
-Configuration Steps
+#### Configuration Steps
 1. EMR Serverless Configuration
 
 Open JupyterHub from Studio Console and execute the following in your notebook:
