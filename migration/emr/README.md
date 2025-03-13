@@ -214,7 +214,7 @@ If you plan to use existing EMR compute resource:
 
 2.2 Adding Existing EMR Serverless Applications (Console)
 Console support for adding existing EMR Serverless applications is planned for future release. 
-For now, use the custom script method described below to create connections.
+For now, use the custom script method described [below](https://github.com/aws/Unified-Studio-for-Amazon-Sagemaker/blob/main/migration/emr/README.md#optional-setting-up-sagemaker-unified-studio-connector-for-emr-compute) to create connections.
 
 
 ### [Optional] Setting up Sagemaker Unified Studio Connector for EMR Compute
