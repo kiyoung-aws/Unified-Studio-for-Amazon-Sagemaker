@@ -103,6 +103,3 @@ python3 bring_your_own_s3_table_bucket.py \
 
 ## Option 2
 If you don't want to grant LakeFormation Administrator permission to the script executor, or if you don't want to use the script, please follow https://docs.aws.amazon.com/sagemaker-unified-studio/latest/userguide/lakehouse-s3-tables-integration.html to import S3 table into SMUS project through AWS Console.
-
-### Note
-With this approach the SMUS project Role would be set as SuperUser of `s3tablescatalog` Catalog.
